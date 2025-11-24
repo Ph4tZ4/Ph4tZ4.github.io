@@ -1842,7 +1842,19 @@
                 // Get current data
                 const data = DataManager.loadData();
 
-                // Force save to LocalStorage (ensures imported data is persisted)
+                // Read Basic Info from form
+                data.about.years = document.getElementById('aboutYears').value;
+                data.about.location = document.getElementById('aboutLocation').value;
+                data.about.description = document.getElementById('aboutDescription').value;
+
+                // Read Philosophy from form
+                data.about.philosophy = document.getElementById('aboutPhilosophy').value;
+
+                // Note: Education, Experience, Interests are managed via their own modals
+                // They are already saved to data.about when using Add/Edit buttons
+                // So we just keep them as-is from the loaded data
+
+                // Force save to LocalStorage
                 DataManager.saveDataLocally(data);
 
                 // Sync to Cloud
