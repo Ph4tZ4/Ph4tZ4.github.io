@@ -251,6 +251,36 @@ const DataManager = {
         return downloadURL;
     },
 
+    // Upload Base64 to Firebase Storage
+    async uploadBase64(base64String, path = 'uploads') {
+        if (!this.storage) throw new Error('Firebase Storage not initialized');
+
+        // Convert Base64 to Blob
+        const blob = this.base64ToBlob(base64String);
+        const fileName = `${Date.now()}_image.jpg`;
+        const storageRef = this.storage.ref(`${path}/${fileName}`);
+
+        const snapshot = await storageRef.put(blob);
+        const downloadURL = await snapshot.ref.getDownloadURL();
+
+        return downloadURL;
+    },
+
+    // Helper: Base64 to Blob
+    base64ToBlob(base64) {
+        const parts = base64.split(';base64,');
+        const contentType = parts[0].split(':')[1];
+        const raw = window.atob(parts[1]);
+        const rawLength = raw.length;
+        const uInt8Array = new Uint8Array(rawLength);
+
+        for (let i = 0; i < rawLength; ++i) {
+            uInt8Array[i] = raw.charCodeAt(i);
+        }
+
+        return new Blob([uInt8Array], { type: contentType });
+    },
+
     // Load Data from LocalStorage (Legacy/Fallback)
     loadData() {
         try {

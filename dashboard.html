@@ -1876,20 +1876,55 @@
 
         // Manual Sync Function
         async function syncToCloud() {
-            if (!confirm('This will overwrite cloud data with your current local data. Continue?')) return;
+            if (!confirm('This will optimize images and sync to cloud. Continue?')) return;
 
-            toggleLoader(true, 'Syncing to Cloud...');
+            toggleLoader(true, 'Optimizing Images & Syncing...');
             try {
                 // Force load from LocalStorage
                 const localData = DataManager.loadData();
+                let hasUpdates = false;
+
+                // Helper to process list
+                const processImages = async (list, path) => {
+                    if (!list) return;
+                    for (let item of list) {
+                        if (item.image && item.image.startsWith('data:image')) {
+                            toggleLoader(true, `Uploading image for ${item.title}...`);
+                            const url = await DataManager.uploadBase64(item.image, path);
+                            item.image = url;
+                            hasUpdates = true;
+                        }
+                    }
+                };
+
+                // Process Projects
+                await processImages(localData.projects, 'projects');
+
+                // Process Certificates
+                await processImages(localData.certificates, 'certificates');
+
+                // Process Profile Image
+                if (localData.profile && localData.profile.image && localData.profile.image.startsWith('data:image')) {
+                    toggleLoader(true, 'Uploading profile image...');
+                    const url = await DataManager.uploadBase64(localData.profile.image, 'profile');
+                    localData.profile.image = url;
+                    hasUpdates = true;
+                }
+
+                toggleLoader(true, 'Saving to Cloud...');
                 const result = await DataManager.pushData(localData);
 
                 if (result.success) {
-                    showAlert('Data synced to cloud successfully!', 'success');
+                    // Update local storage with new URLs so we don't upload again
+                    if (hasUpdates) {
+                        DataManager.saveDataLocally(localData);
+                    }
+                    showAlert('Data synced and optimized successfully!', 'success');
                 } else {
                     showAlert('Sync failed: ' + result.message, 'error');
                 }
             } catch (error) {
+                console.error(error);
                 showAlert('Error syncing: ' + error.message, 'error');
             } finally {
                 toggleLoader(false);
