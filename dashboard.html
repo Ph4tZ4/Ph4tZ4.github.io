@@ -572,24 +572,12 @@
                         required></textarea>
                 </div>
                 <div class="form-group">
-                    <label class="form-label" for="projectImage">Cover Image</label>
-                    <div class="flex flex-col space-y-2">
-                        <input type="url" id="projectImage" class="form-input"
-                            placeholder="https://example.com/image.jpg">
-                        <div class="text-center text-gray-500 text-sm py-1">- OR -</div>
-                        <input type="file" id="projectImageFile" class="form-input" accept="image/*"
-                            onchange="handleImageUpload(event, 'projectImagePreview', 'projectImageBase64')">
-                        <input type="hidden" id="projectImageBase64">
-                        <div id="projectImagePreview"
-                            class="hidden mt-2 w-full h-40 bg-surfaceHighlight border border-white/10 rounded overflow-hidden relative">
-                            <img src="" class="w-full h-full object-cover">
-                            <button type="button"
-                                onclick="clearImageUpload('projectImageFile', 'projectImagePreview', 'projectImageBase64')"
-                                class="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors">
-                                <i data-lucide="x" class="w-4 h-4"></i>
-                            </button>
-                        </div>
-                    </div>
+                    <label class="form-label">Cover Image URL</label>
+                    <input type="url" id="projectImageUrl" class="form-input"
+                        placeholder="https://raw.githubusercontent.com/Ph4tZ4/Ph4tZ4.github.io/main/images/uploads/project.jpg">
+                    <small style="color: #6b7280; font-size: 0.75rem; margin-top: 0.25rem; display: block;">
+                        Upload image to <code>images/uploads/</code> in your GitHub repo, then paste the raw URL here
+                    </small>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeProjectModal()">Cancel</button>
@@ -627,24 +615,12 @@
                         required></textarea>
                 </div>
                 <div class="form-group">
-                    <label class="form-label" for="certificateImage">Cover Image</label>
-                    <div class="flex flex-col space-y-2">
-                        <input type="url" id="certificateImage" class="form-input"
-                            placeholder="https://example.com/image.jpg">
-                        <div class="text-center text-gray-500 text-sm py-1">- OR -</div>
-                        <input type="file" id="certificateImageFile" class="form-input" accept="image/*"
-                            onchange="handleImageUpload(event, 'certificateImagePreview', 'certificateImageBase64')">
-                        <input type="hidden" id="certificateImageBase64">
-                        <div id="certificateImagePreview"
-                            class="hidden mt-2 w-full h-40 bg-surfaceHighlight border border-white/10 rounded overflow-hidden relative">
-                            <img src="" class="w-full h-full object-cover">
-                            <button type="button"
-                                onclick="clearImageUpload('certificateImageFile', 'certificateImagePreview', 'certificateImageBase64')"
-                                class="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors">
-                                <i data-lucide="x" class="w-4 h-4"></i>
-                            </button>
-                        </div>
-                    </div>
+                    <label class="form-label">Certificate Image URL</label>
+                    <input type="url" id="certificateImageUrl" class="form-input"
+                        placeholder="https://raw.githubusercontent.com/Ph4tZ4/Ph4tZ4.github.io/main/images/uploads/cert.jpg">
+                    <small style="color: #6b7280; font-size: 0.75rem; margin-top: 0.25rem; display: block;">
+                        Upload image to <code>images/uploads/</code> in your GitHub repo, then paste the raw URL here
+                    </small>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeCertificateModal()">Cancel</button>
@@ -1458,27 +1434,19 @@
                 document.getElementById('projectTitle').value = project.title;
                 document.getElementById('projectTech').value = project.tech;
 
-                // Populate Links (Migration: Use old 'link' as 'repoLink' if needed)
+                // Populate Links
                 document.getElementById('projectRepoLink').value = project.repoLink || project.link || '';
                 document.getElementById('projectDemoLink').value = project.demoLink || '';
 
                 document.getElementById('projectDescription').value = project.description;
 
-                // Show existing image preview
-                const preview = document.getElementById('projectImagePreview');
-                if (project.image) {
-                    preview.innerHTML = `<img src="${project.image}" style="width: 100%; height: 100%; object-fit: cover;">`;
-                    document.getElementById('projectImageBase64').value = project.image;
-                } else {
-                    preview.innerHTML = `<div style="text-align: center; color: #6b7280;"><i data-lucide="image" style="width: 32px; height: 32px; margin-bottom: 0.5rem;"></i><br>No image selected</div>`;
-                    lucide.createIcons();
-                }
+                // Populate Image URL
+                document.getElementById('projectImageUrl').value = project.image || '';
             } else {
                 title.textContent = 'Add Project';
                 document.getElementById('projectForm').reset();
-                document.getElementById('projectImagePreview').innerHTML = `<div style="text-align: center; color: #6b7280;"><i data-lucide="image" style="width: 32px; height: 32px; margin-bottom: 0.5rem;"></i><br>No image selected</div>`;
-                document.getElementById('projectImageBase64').value = '';
-                lucide.createIcons();
+                // Clear the image URL field when adding a new project
+                document.getElementById('projectImageUrl').value = '';
             }
 
             modal.classList.add('active');
@@ -1520,22 +1488,13 @@
             try {
                 const data = await DataManager.fetchData();
 
-                // Handle Image Upload
-                let imageUrl = document.getElementById('projectImageBase64').value;
-                const fileInput = document.getElementById('projectImageFile');
-
-                if (fileInput.files.length > 0) {
-                    toggleLoader(true, 'Uploading Image...');
-                    imageUrl = await DataManager.uploadImage(fileInput.files[0], 'projects');
-                }
-
                 const project = {
                     title: document.getElementById('projectTitle').value,
                     tech: document.getElementById('projectTech').value,
                     description: document.getElementById('projectDescription').value,
                     repoLink: document.getElementById('projectRepoLink').value,
                     demoLink: document.getElementById('projectDemoLink').value,
-                    image: imageUrl
+                    image: document.getElementById('projectImageUrl').value
                 };
 
                 if (editingProjectIndex !== null) {
@@ -1544,7 +1503,6 @@
                     data.projects.push(project);
                 }
 
-                toggleLoader(true, 'Saving Data...');
                 const result = await DataManager.pushData(data);
 
                 if (result.success) {
@@ -1616,38 +1574,23 @@
             lucide.createIcons();
         }
 
-        function openCertificateModal(index = null) {
+        async function openCertificateModal(index = null) {
             editingCertificateIndex = index;
             const modal = document.getElementById('certificateModal');
             const title = document.getElementById('certificateModalTitle');
 
             if (index !== null) {
-                const data = DataManager.loadData();
+                const data = await DataManager.fetchData();
                 const certificate = data.certificates[index];
                 title.textContent = 'Edit Certificate';
                 document.getElementById('certificateTitle').value = certificate.title;
                 document.getElementById('certificateIssuer').value = certificate.issuer;
                 document.getElementById('certificateDate').value = certificate.date;
                 document.getElementById('certificateDescription').value = certificate.description;
-
-                // Handle Image (URL or Base64)
-                const image = certificate.image || '';
-                if (image.startsWith('data:image')) {
-                    document.getElementById('certificateImageBase64').value = image;
-                    document.getElementById('certificateImage').value = ''; // Clear URL input
-                    const preview = document.getElementById('certificateImagePreview');
-                    preview.classList.remove('hidden');
-                    preview.querySelector('img').src = image;
-                } else {
-                    document.getElementById('certificateImage').value = image;
-                    document.getElementById('certificateImageBase64').value = '';
-                    document.getElementById('certificateImagePreview').classList.add('hidden');
-                }
+                document.getElementById('certificateImageUrl').value = certificate.image || '';
             } else {
                 title.textContent = 'Add Certificate';
                 document.getElementById('certificateForm').reset();
-                document.getElementById('certificateImageBase64').value = '';
-                document.getElementById('certificateImagePreview').classList.add('hidden');
             }
 
             modal.classList.add('active');
@@ -1689,21 +1632,12 @@
             try {
                 const data = await DataManager.fetchData();
 
-                // Handle Image Upload
-                let imageUrl = document.getElementById('certificateImageBase64').value;
-                const fileInput = document.getElementById('certificateImageFile');
-
-                if (fileInput.files.length > 0) {
-                    toggleLoader(true, 'Uploading Image...');
-                    imageUrl = await DataManager.uploadImage(fileInput.files[0], 'certificates');
-                }
-
                 const cert = {
                     title: document.getElementById('certificateTitle').value,
                     issuer: document.getElementById('certificateIssuer').value,
                     date: document.getElementById('certificateDate').value,
                     description: document.getElementById('certificateDescription').value,
-                    image: imageUrl
+                    image: document.getElementById('certificateImageUrl').value
                 };
 
                 if (editingCertificateIndex !== null) {
@@ -1713,7 +1647,6 @@
                     data.certificates.push(cert);
                 }
 
-                toggleLoader(true, 'Saving Data...');
                 const result = await DataManager.pushData(data);
 
                 if (result.success) {
@@ -1876,50 +1809,15 @@
 
         // Manual Sync Function
         async function syncToCloud() {
-            if (!confirm('This will optimize images and sync to cloud. Continue?')) return;
+            if (!confirm('This will sync your data to cloud. Continue?')) return;
 
-            toggleLoader(true, 'Optimizing Images & Syncing...');
+            toggleLoader(true, 'Syncing to Cloud...');
             try {
-                // Force load from LocalStorage
                 const localData = DataManager.loadData();
-                let hasUpdates = false;
-
-                // Helper to process list
-                const processImages = async (list, path) => {
-                    if (!list) return;
-                    for (let item of list) {
-                        if (item.image && item.image.startsWith('data:image')) {
-                            toggleLoader(true, `Uploading image for ${item.title}...`);
-                            const url = await DataManager.uploadBase64(item.image, path);
-                            item.image = url;
-                            hasUpdates = true;
-                        }
-                    }
-                };
-
-                // Process Projects
-                await processImages(localData.projects, 'projects');
-
-                // Process Certificates
-                await processImages(localData.certificates, 'certificates');
-
-                // Process Profile Image
-                if (localData.profile && localData.profile.image && localData.profile.image.startsWith('data:image')) {
-                    toggleLoader(true, 'Uploading profile image...');
-                    const url = await DataManager.uploadBase64(localData.profile.image, 'profile');
-                    localData.profile.image = url;
-                    hasUpdates = true;
-                }
-
-                toggleLoader(true, 'Saving to Cloud...');
                 const result = await DataManager.pushData(localData);
 
                 if (result.success) {
-                    // Update local storage with new URLs so we don't upload again
-                    if (hasUpdates) {
-                        DataManager.saveDataLocally(localData);
-                    }
-                    showAlert('Data synced and optimized successfully!', 'success');
+                    showAlert('Data synced successfully!', 'success');
                 } else {
                     showAlert('Sync failed: ' + result.message, 'error');
                 }
