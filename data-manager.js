@@ -32,69 +32,104 @@ const DataManager = {
         return {
             about: {
                 years: "5+",
-                location: "Bangkok, Thailand",
+                location: "Loei, Thailand",
                 status: "Open for Freelance",
-                description: "I am a creative technologist bridging the gap between design and engineering. My philosophy is simple: technology should feel magical.",
-                detail: "With a background in Computer Science and a passion for Motion Design, I build applications that are not only functional but emotionally resonant.",
+                description: "สวัสดีครับ ผมนายกิตติภัทร สุวรรณศรี นักศึกษาปวส.2 สาขานักพัฒนาซอฟต์แวร์ขั้นสูง แผนกเทคโนโลยีสารสนเทศ ผมเชื่อว่าเทคโนโลยีที่ดี ควรช่วยให้ชีวิตผู้คนดีขึ้นได้จริง งานของผมจึงไม่ได้เน้นแค่ “ทำงานได้” แต่ต้อง “สร้างประสบการณ์ที่ดีให้ผู้ใช้” ไปพร้อมกัน",
+                detail: "ผมหลงใหลการสร้างสรรค์แอปและซอฟต์แวร์ใหม่ ๆ ที่ตอบโจทย์การใช้งาน และมีลูกเล่นที่สะท้อนความเป็นตัวเอง และยังมีอีกหลายโปรเจกต์ที่กำลังพัฒนาอยู่บน GitHub ซึ่งเติบโตไปพร้อมกับผมในทุกวัน",
                 education: [
                     {
-                        degree: "Bachelor of Science in Computer Science",
-                        institution: "Chulalongkorn University",
-                        year: "2018 - 2022",
-                        description: "Specialized in Software Engineering and Human-Computer Interaction. Graduated with First Class Honors."
+                        degree: "นักพัฒนาซอฟต์แวร์เว็บ และอุปกรณ์เคลื่อนที / นักพัฒนางานระบบสมองกลฝังตัว และ IoT",
+                        institution: "วิทยาลัยเทคนิคชัยภูมิ / วิทยาลัยเทคนิคเลย",
+                        year: "2021 - 2023",
+                        description: "นี่เป็นการเริ่มเรียนเกี่ยวกับ IT อย่างจริงจัง จากการที่ผมย้ายไป 2 สถาบัน ที่มีหลักสูตรขั้นพื้นฐานที่แตกต่างกัน ทำให้ผมได้รับความรู้ทั้งสองด้านเข้ามา และในช่วงนี้ผมก็ยังได้เข้าร่วมการแข่งขันทักษะวิชาชีพ แล้วก็ยังมีการได้เข้าฝึกงานกับบริษัท น้ำตาลมิตรผล จำกัด อีกด้วย"
                     },
                     {
-                        degree: "Full-Stack Web Development Bootcamp",
-                        institution: "Le Wagon Bangkok",
-                        year: "2021",
-                        description: "Intensive 9-week coding bootcamp focusing on Ruby on Rails, JavaScript, and modern web technologies."
+                        degree: "นักพัฒนาซอฟต์แวร์ขั้นสูง",
+                        institution: "วิทยาลัยเทคนิคเลย",
+                        year: "2024 - 2025",
+                        description: "นี่เป็นปีที่ผมได้รู้ตัวเองแล้วว่าตัวเองเหมาะกับอะไร และชอบทำอะไร ผมจึงเรื่องที่จะมาเรียนการเป็นนักพัฒนาซอฟต์แวร์ขั้นสูง เพื่อให้ตัวเองได้รับความรู้เชิงลึกในด้านนี้ แม้ว่าจะเลือกเรียนเป็นนักพัฒนาซอฟต์แวร์ แต่ผมก็เรียนวิชาเสริมที่เกี่ยวกับด้าน Network, AI และแม้ว่าในหลักสูตรจะมีวิชา Hybrid App อยู่แล้ว แต่ผมก็เลือกที่จะเรียน Native App ด้วย เพื่อที่จะได้รู้ในทุก ๆ ด้าน และเพื่อจะได้นำไปปรับใช้ในอนาคต"
                     }
                 ],
                 experience: [
                     {
-                        role: "Senior Frontend Developer",
-                        company: "Digital Innovations Co.",
-                        period: "2022 - Present",
-                        description: "Leading the development of enterprise-level web applications with React and Next.js. Mentoring junior developers and establishing coding standards."
+                        role: "IT INTERN SUPERVISOR",
+                        company: "ICONNEX THAILAND (ปัจจุบันคือ ICONNEX WORLD) ",
+                        period: "มีนาคม - มิถุนายน 2568",
+                        description: "รับผิดชอบการบริหารจัดการนักศึกษาฝึกงาน IT ภายในทีมและมอบหมายงานตามความถนัด พัฒนาเว็บไซต์และระบบภายในสำหรับใช้งานในองค์กร ห้างสรรพสินค้า และงาน Event ต่างๆ โดยใช้เทคโนโลยี HTML, CSS, JavaScript (และ Frameworks), PHP, SQL, Python และเครื่องมืออย่าง Docker, GitHub, MongoDB เพื่อปรับปรุงคุณภาพงาน พร้อมทั้งตรวจสอบคุณภาพและความถูกต้องของโค้ด (Code Review) ก่อนนำขึ้น Production เพื่อให้ระบบมีความเสถียรและปลอดภัย รวมถึงเพิ่มประสิทธิภาพระบบ ลดข้อผิดพลาด และทำให้การใช้งานง่ายขึ้นสำหรับผู้ใช้จริง"
                     },
                     {
-                        role: "Full-Stack Developer",
-                        company: "StartupHub Thailand",
-                        period: "2020 - 2022",
-                        description: "Built and maintained multiple client projects using modern JavaScript frameworks. Collaborated with designers to create pixel-perfect implementations."
+                        role: "IT INTERN",
+                        company: "Mitr Phol Sugar Co., Ltd.",
+                        period: "มีนาคม - เมษายน 2566",
+                        description: "ดูแลและสนับสนุนระบบเครือข่ายและอุปกรณ์คอมพิวเตอร์ในองค์กร พัฒนาและแก้ไขระบบงานพื้นฐานเพื่อเพิ่มประสิทธิภาพการทำงาน พัฒนาเว็บไซต์หลักของบริษัทและเว็บไซต์ที่ใช้ในการสัมมนาในงานต่างๆ พร้อมทั้งเรียนรู้การทำงานแบบมืออาชีพและการทำงานร่วมกับทีม IT ในองค์กรขนาดใหญ่"
                     },
                     {
-                        role: "Junior Web Developer",
-                        company: "Creative Agency Bangkok",
-                        period: "2019 - 2020",
-                        description: "Developed responsive websites and interactive web experiences. Gained expertise in CSS animations and JavaScript libraries."
+                        role: "FRONTEND SOFTWARE DEVELOPER",
+                        company: "วิทยาลัยเทคนิคเลย",
+                        period: "2024 - ปัจจุบัน",
+                        description: "รับผิดชอบการดูแล ออกแบบ และพัฒนาส่วนหน้าบ้าน (Frontend) ของเว็บไซต์ทั้งหมดที่เกี่ยวข้องกับวิทยาลัยตามที่ได้รับมอบหมาย โดยเน้นการสร้างประสบการณ์ผู้ใช้งานที่ดี (User Experience) และออกแบบส่วนติดต่อผู้ใช้ (User Interface) ให้มีความสวยงาม ใช้งานง่าย และตอบสนองได้ดีบนทุกอุปกรณ์ (Responsive Design) พร้อมทั้งทำงานร่วมกับทีมพัฒนาเพื่อให้มั่นใจว่าเว็บไซต์มีประสิทธิภาพและตรงตามความต้องการของวิทยาลัยและผู้ใช้งาน"
                     }
                 ],
-                philosophy: "I believe that great software is born at the intersection of aesthetics and functionality. Every line of code should serve a purpose, and every interface should tell a story. My approach combines technical excellence with creative vision, ensuring that the applications I build are not just tools, but experiences that users genuinely enjoy.",
+                philosophy: "ผมเชื่อว่าการพัฒนาซอฟต์แวร์ที่ดีไม่ได้เกิดจากเทคโนโลยีเพียงอย่างเดียว แต่ต้องมาพร้อมกับความเข้าใจในความต้องการของผู้ใช้งานจริงและการทำงานเป็นทีมอย่างมีประสิทธิภาพ ในการทำงานทุกโปรเจกต์ ผมมุ่งเน้นการสร้างโซลูชันที่ไม่เพียงแค่ทำงานได้ แต่ต้องใช้งานง่าย มีเสถียรภาพ และสามารถขยายงานได้ในอนาคต ผมให้ความสำคัญกับคุณภาพของโค้ดผ่านการทำ Code Review อย่างสม่ำเสมอ เพราะเชื่อว่าการป้องกันปัญหาตั้งแต่ต้นทางดีกว่าการแก้ไขภายหลัง ในฐานะหัวหน้าทีมฝึกงาน ผมได้เรียนรู้ว่าการมอบหมายงานตามจุดแข็งของแต่ละคนและการสื่อสารที่ชัดเจนเป็นกุญแจสำคัญของความสำเร็จ ผมมุ่งมั่นพัฒนาตนเองอย่างต่อเนื่อง ติดตามเทคโนโลยีใหม่ๆ และแบ่งปันความรู้ผ่านการบรรยายและพอดแคสต์ เพราะเชื่อว่าการเติบโตของตัวเองและทีมเกิดขึ้นพร้อมกัน ด้วยเป้าหมายในการก้าวสู่ตำแหน่ง Project Manager ผมจึงพัฒนาทักษะทั้งด้านเทคนิคและการบริหารจัดการอย่างสมดุล เพื่อเป็นผู้นำที่สามารถเชื่อมโยงระหว่างทีมพัฒนาและวัตถุประสงค์ทางธุรกิจได้อย่างมีประสิทธิภาพ",
                 interests: [
-                    "3D Graphics & WebGL",
-                    "Motion Design & Animation",
-                    "UI/UX Design Systems",
+                    "Web Development & Programming",
+                    "Learning New Technologies & Frameworks",
+                    "Artificial Intelligence & Machine Learning",
+                    "IT Education & Mentoring",
+                    "Podcasting & Content Creation",
+                    "Tech Community Involvement",
+                    "Public Speaking & Presentations",
+                    "Problem Solving & Innovation",
+                    "System Architecture & Design Patterns",
+                    "Reading Tech Blogs & Articles",
                     "Open Source Contribution",
-                    "Photography & Visual Arts",
-                    "Electronic Music Production"
+                    "UI/UX Design",
+                    "Gaming & Game Development",
+                    "Music & Entertainment",
+                    "Photography & Videography",
+                    "Networking & Professional Development",
+                    "Attending Tech Conferences & Workshops",
+                    "Writing Technical Documentation",
+                    "Code Optimization & Performance Tuning",
+                    "Exploring Cloud Technologies",
+                    "Cybersecurity & Best Practices",
+                    "Mobile App Development",
+                    "DevOps & Automation",
+                    "Building Side Projects",
+                    "Traveling & Cultural Exchange"
                 ],
                 expertise: [
                     {
-                        area: "Frontend Architecture",
-                        description: "Expert in building scalable, maintainable frontend applications using modern frameworks and design patterns."
+                        area: "Frontend Development",
+                        description: "มีความเชี่ยวชาญในการพัฒนาส่วนหน้าบ้านของเว็บแอปพลิเคชันด้วย HTML, CSS, JavaScript และ Frameworks ต่างๆ โดยเน้นการสร้าง User Interface ที่สวยงาม ใช้งานง่าย และรองรับการแสดงผลบนหลากหลายอุปกรณ์ (Responsive Design) พร้อมทั้งปรับปรุงประสิทธิภาพการทำงานให้รวดเร็วและราบรื่น"
                     },
                     {
-                        area: "Performance Optimization",
-                        description: "Specialized in optimizing web applications for speed, implementing lazy loading, code splitting, and efficient rendering strategies."
+                        area: "Backend Development",
+                        description: "มีประสบการณ์ในการพัฒนาระบบฝั่ง Backend โดยใช้ PHP, Python, และ SQL ในการสร้าง API, จัดการฐานข้อมูล และพัฒนาระบบภายในองค์กร สามารถออกแบบสถาปัตยกรรมระบบที่มีประสิทธิภาพ ปลอดภัย และรองรับการขยายงานในอนาคตได้"
                     },
                     {
-                        area: "Creative Coding",
-                        description: "Passionate about pushing the boundaries of web technology with WebGL, Canvas API, and creative animation libraries."
+                        area: "Database Management",
+                        description: "เชี่ยวชาญในการออกแบบและจัดการฐานข้อมูลทั้งแบบ Relational (SQL) และ NoSQL (MongoDB) สามารถเขียน Query ที่มีประสิทธิภาพ ปรับแต่งโครงสร้างฐานข้อมูลให้เหมาะสม และรักษาความสมบูรณ์ของข้อมูลได้อย่างมีประสิทธิภาพ"
                     },
                     {
-                        area: "Design Systems",
-                        description: "Experienced in creating and maintaining comprehensive design systems that ensure consistency across large-scale applications."
+                        area: "DevOps & Version Control",
+                        description: "มีความชำนาญในการใช้เครื่องมือสำหรับการพัฒนาและการทำงานร่วมกันในทีม เช่น Docker สำหรับ Containerization และ GitHub สำหรับ Version Control และ Collaboration สามารถจัดการ Workflow การพัฒนาตั้งแต่ Development จนถึง Production ได้อย่างเป็นระบบ"
+                    },
+                    {
+                        area: "Code Quality & Review",
+                        description: "มีประสบการณ์ในการตรวจสอบคุณภาพโค้ด (Code Review) และ Quality Assurance ก่อนนำขึ้น Production เพื่อให้มั่นใจว่าระบบมีความเสถียร ปลอดภัย และมีประสิทธิภาพสูง พร้อมทั้งลดข้อผิดพลาดและปัญหาที่อาจเกิดขึ้นในอนาคต"
+                    },
+                    {
+                        area: "Team Leadership & Project Management",
+                        description: "มีประสบการณ์ในการบริหารจัดการทีมนักศึกษาฝึกงาน IT ในฐานะหัวหน้าทีม สามารถมอบหมายงานตามความถนัดของแต่ละคน วางแผนการทำงาน และประสานงานระหว่างทีมพัฒนากับความต้องการทางธุรกิจได้อย่างมีประสิทธิภาพ"
+                    },
+                    {
+                        area: "Problem Solving & System Optimization",
+                        description: "สามารถวิเคราะห์และแก้ไขปัญหาเชิงเทคนิคได้อย่างรวดเร็ว เพิ่มประสิทธิภาพระบบ ลดข้อผิดพลาด และปรับปรุงประสบการณ์ผู้ใช้งานให้ดีขึ้นผ่านการใช้เทคโนโลยีและแนวทางที่เหมาะสม"
+                    },
+                    {
+                        area: "Hardware & IoT Development",
+                        description: "มีพื้นฐานในการเขียนโปรแกรมควบคุม Hardware ด้วย Arduino และภาษา C/C++ สามารถพัฒนาโปรเจกต์ IoT และระบบฝังตัว (Embedded System) เบื้องต้นได้"
                     }
                 ]
             },
