@@ -1,0 +1,1889 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIKANOMWAAN.ADMIN - Dashboard</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="admin-styles.css">
+
+    <!-- Security Check -->
+    <script>
+        if (!sessionStorage.getItem('admin_secret_access')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</head>
+
+<body>
+    <!-- Loading Overlay -->
+    <div id="globalLoader" class="loading-overlay">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loadingText">Connecting to Cloud...</div>
+    </div>
+
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="dashboard-logo">
+            <span style="color: #EAB308;">PIKANOMWAAN</span><span>.ADMIN</span>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-secondary" onclick="syncToCloud()" title="Push Local Data to Cloud">
+                <i data-lucide="cloud-upload" style="width: 16px; height: 16px;"></i>
+                Sync to Cloud
+            </button>
+            <a href="index.html" target="_blank" class="btn btn-secondary">
+                <i data-lucide="external-link" style="width: 16px; height: 16px;"></i>
+                View Site
+            </a>
+            <button class="btn btn-danger" onclick="logout()">
+                <i data-lucide="log-out" style="width: 16px; height: 16px;"></i>
+                Logout
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <div class="dashboard-main">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul class="sidebar-nav">
+                <li>
+                    <button class="active" onclick="switchSection('overview')">
+                        <i data-lucide="layout-dashboard" style="width: 16px; height: 16px;"></i>
+                        Overview
+                    </button>
+                </li>
+                <li>
+                    <button onclick="switchSection('about')">
+                        <i data-lucide="user" style="width: 16px; height: 16px;"></i>
+                        About Me
+                    </button>
+                </li>
+                <li>
+                    <button onclick="switchSection('skills')">
+                        <i data-lucide="code-2" style="width: 16px; height: 16px;"></i>
+                        Skills
+                    </button>
+                </li>
+                <li>
+                    <button onclick="switchSection('projects')">
+                        <i data-lucide="folder" style="width: 16px; height: 16px;"></i>
+                        Projects
+                    </button>
+                </li>
+                <li>
+                    <button onclick="switchSection('certificates')">
+                        <i data-lucide="award" style="width: 16px; height: 16px;"></i>
+                        Certificates
+                    </button>
+                </li>
+                <li>
+                    <button onclick="switchSection('settings')">
+                        <i data-lucide="settings" style="width: 16px; height: 16px;"></i>
+                        Settings
+                    </button>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="content-area">
+            <div id="alertContainer"></div>
+
+            <!-- Overview Section -->
+            <section id="overview" class="section active">
+                <div class="section-header">
+                    <h1 class="section-title">Dashboard Overview</h1>
+                    <p class="section-description">Manage your portfolio content from one place</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="statSkills">0</div>
+                        <div class="stat-label">Skills</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="statProjects">0</div>
+                        <div class="stat-label">Projects</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="statCertificates">0</div>
+                        <div class="stat-label">Certificates</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="statExperience">0</div>
+                        <div class="stat-label">Years Experience</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">Quick Actions</h3>
+                    <div class="flex gap-2">
+                        <button class="btn btn-primary" onclick="switchSection('skills')">
+                            <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                            Add Skill
+                        </button>
+                        <button class="btn btn-primary" onclick="switchSection('projects')">
+                            <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                            Add Project
+                        </button>
+                        <button class="btn btn-secondary" onclick="exportData()">
+                            <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                            Export Data
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section id="about" class="section">
+                <div class="section-header">
+                    <h1 class="section-title">About Me</h1>
+                    <p class="section-description">Update your personal information and background</p>
+                </div>
+
+                <!-- Basic Information -->
+                <div class="card">
+                    <h3 class="card-title">Basic Information</h3>
+                    <form id="aboutBasicForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="aboutYears">Years of Experience</label>
+                                <input type="text" id="aboutYears" class="form-input" placeholder="e.g., 5+">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="aboutLocation">Location</label>
+                                <input type="text" id="aboutLocation" class="form-input"
+                                    placeholder="e.g., Bangkok, Thailand">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="aboutStatus">Availability Status</label>
+                                <input type="text" id="aboutStatus" class="form-input"
+                                    placeholder="e.g., Open for Freelance">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="aboutDescription">Short Description</label>
+                            <textarea id="aboutDescription" class="form-textarea"
+                                placeholder="Brief introduction about yourself"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="aboutDetail">Detailed Description</label>
+                            <textarea id="aboutDetail" class="form-textarea"
+                                placeholder="More detailed information about your background"></textarea>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i data-lucide="save" style="width: 16px; height: 16px;"></i>
+                                Save Basic Info
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Education -->
+                <div class="card">
+                    <div class="flex-between" style="margin-bottom: 1rem;">
+                        <h3 class="card-title">Education</h3>
+                        <button class="btn btn-primary btn-small" onclick="openEducationModal()">
+                            <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+                            Add Education
+                        </button>
+                    </div>
+                    <div id="educationList"></div>
+                </div>
+
+                <!-- Experience -->
+                <div class="card">
+                    <div class="flex-between" style="margin-bottom: 1rem;">
+                        <h3 class="card-title">Experience</h3>
+                        <button class="btn btn-primary btn-small" onclick="openExperienceModal()">
+                            <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+                            Add Experience
+                        </button>
+                    </div>
+                    <div id="experienceList"></div>
+                </div>
+
+                <!-- Philosophy -->
+                <div class="card">
+                    <h3 class="card-title">Philosophy & Approach</h3>
+                    <form id="aboutPhilosophyForm">
+                        <div class="form-group">
+                            <label class="form-label" for="aboutPhilosophy">Your Development Philosophy</label>
+                            <textarea id="aboutPhilosophy" class="form-textarea" rows="4"
+                                placeholder="Describe your approach to software development and design..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i data-lucide="save" style="width: 16px; height: 16px;"></i>
+                            Save Philosophy
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Interests -->
+                <div class="card">
+                    <h3 class="card-title">Interests & Hobbies</h3>
+                    <form id="aboutInterestsForm">
+                        <div class="form-group">
+                            <label class="form-label" for="interestInput">Add Interest</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="interestInput" class="form-input"
+                                    placeholder="e.g., 3D Graphics & WebGL">
+                                <button type="button" class="btn btn-primary" onclick="addInterest()">
+                                    <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="interestsList" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Expertise -->
+                <div class="card">
+                    <div class="flex-between" style="margin-bottom: 1rem;">
+                        <h3 class="card-title">Technical Expertise</h3>
+                        <button class="btn btn-primary btn-small" onclick="openExpertiseModal()">
+                            <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+                            Add Expertise
+                        </button>
+                    </div>
+                    <div id="expertiseList"></div>
+                </div>
+            </section>
+
+            <!-- Skills Section -->
+            <section id="skills" class="section">
+                <div class="section-header flex-between">
+                    <div>
+                        <h1 class="section-title">Skills Management</h1>
+                        <p class="section-description">Add, edit, or remove your skills</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openSkillModal()">
+                        <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                        Add Skill
+                    </button>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;">Sort</th>
+                            <th>Skill Name</th>
+                            <th>Category</th>
+                            <th>Level (%)</th>
+                            <th style="width: 150px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="skillsTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projects" class="section">
+                <div class="section-header flex-between">
+                    <div>
+                        <h1 class="section-title">Projects Management</h1>
+                        <p class="section-description">Manage your portfolio projects</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openProjectModal()">
+                        <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                        Add Project
+                    </button>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;">Sort</th>
+                            <th style="width: 80px;">Image</th>
+                            <th>Project Title</th>
+                            <th>Tech Stack</th>
+                            <th>Description</th>
+                            <th style="width: 150px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="projectsTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Certificates Section -->
+            <section id="certificates" class="section">
+                <div class="section-header flex-between">
+                    <div>
+                        <h1 class="section-title">Certificates Management</h1>
+                        <p class="section-description">Manage your professional certificates and achievements</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openCertificateModal()">
+                        <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                        Add Certificate
+                    </button>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;">Sort</th>
+                            <th style="width: 80px;">Image</th>
+                            <th>Certificate Title</th>
+                            <th>Issuer</th>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th style="width: 150px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="certificatesTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="section">
+                <div class="section-header">
+                    <h1 class="section-title">Settings</h1>
+                    <p class="section-description">Manage your admin settings</p>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">Change Password</h3>
+                    <form id="passwordForm">
+                        <div class="form-group">
+                            <label class="form-label" for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" class="form-input" placeholder="Enter new password">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="confirmPassword">Confirm Password</label>
+                            <input type="password" id="confirmPassword" class="form-input"
+                                placeholder="Confirm new password">
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i data-lucide="lock" style="width: 16px; height: 16px;"></i>
+                            Update Password
+                        </button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">Data Management</h3>
+                    <div class="flex gap-2">
+                        <button class="btn btn-primary" onclick="exportData()">
+                            <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                            Export Data
+                        </button>
+                        <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">
+                            <i data-lucide="upload" style="width: 16px; height: 16px;"></i>
+                            Import Data
+                        </button>
+                        <input type="file" id="importFile" accept=".json" style="display: none;"
+                            onchange="importData(this)">
+                    </div>
+                    <p style="margin-top: 1rem; color: #6b7280; font-size: 0.875rem;">
+                        Export your data as a backup or import previously saved data.
+                    </p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Skill Modal -->
+    <div id="skillModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="skillModalTitle">Add Skill</h2>
+                <button class="modal-close" onclick="closeSkillModal()">×</button>
+            </div>
+            <form id="skillForm">
+                <div class="form-group">
+                    <label class="form-label" for="skillName">Skill Name</label>
+                    <input type="text" id="skillName" class="form-input" placeholder="e.g., JavaScript" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="skillCategory">Category</label>
+                    <select id="skillCategory" class="form-select" required>
+                        <option value="">Select category</option>
+                        <option value="Frontend">Frontend</option>
+                        <option value="Backend">Backend</option>
+                        <option value="Creative">Creative</option>
+                        <option value="Database">Database</option>
+                        <option value="DevOps">DevOps</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="skillLevel">Skill Level (%)</label>
+                    <input type="number" id="skillLevel" class="form-input" min="0" max="100" placeholder="0-100"
+                        required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeSkillModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Skill</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Education Modal -->
+    <div id="educationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="educationModalTitle">Add Education</h2>
+                <button class="modal-close" onclick="closeEducationModal()">×</button>
+            </div>
+            <form id="educationForm">
+                <div class="form-group">
+                    <label class="form-label" for="educationDegree">Degree/Program</label>
+                    <input type="text" id="educationDegree" class="form-input"
+                        placeholder="e.g., Bachelor of Science in Computer Science" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="educationInstitution">Institution</label>
+                    <input type="text" id="educationInstitution" class="form-input"
+                        placeholder="e.g., Chulalongkorn University" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="educationYear">Year/Period</label>
+                    <input type="text" id="educationYear" class="form-input" placeholder="e.g., 2018 - 2022" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="educationDescription">Description</label>
+                    <textarea id="educationDescription" class="form-textarea"
+                        placeholder="Describe your studies, achievements, etc." required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeEducationModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Education</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Experience Modal -->
+    <div id="experienceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="experienceModalTitle">Add Experience</h2>
+                <button class="modal-close" onclick="closeExperienceModal()">×</button>
+            </div>
+            <form id="experienceForm">
+                <div class="form-group">
+                    <label class="form-label" for="experienceRole">Role/Position</label>
+                    <input type="text" id="experienceRole" class="form-input"
+                        placeholder="e.g., Senior Frontend Developer" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="experienceCompany">Company</label>
+                    <input type="text" id="experienceCompany" class="form-input"
+                        placeholder="e.g., Digital Innovations Co." required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="experiencePeriod">Period</label>
+                    <input type="text" id="experiencePeriod" class="form-input" placeholder="e.g., 2022 - Present"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="experienceDescription">Description</label>
+                    <textarea id="experienceDescription" class="form-textarea"
+                        placeholder="Describe your responsibilities and achievements..." required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeExperienceModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Experience</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Expertise Modal -->
+    <div id="expertiseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="expertiseModalTitle">Add Expertise</h2>
+                <button class="modal-close" onclick="closeExpertiseModal()">×</button>
+            </div>
+            <form id="expertiseForm">
+                <div class="form-group">
+                    <label class="form-label" for="expertiseArea">Expertise Area</label>
+                    <input type="text" id="expertiseArea" class="form-input" placeholder="e.g., Frontend Architecture"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="expertiseDescription">Description</label>
+                    <textarea id="expertiseDescription" class="form-textarea"
+                        placeholder="Describe your expertise in this area..." required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeExpertiseModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Expertise</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Project Modal -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="projectModalTitle">Add Project</h2>
+                <button class="modal-close" onclick="closeProjectModal()">×</button>
+            </div>
+            <form id="projectForm">
+                <div class="form-group">
+                    <label class="form-label" for="projectTitle">Project Title</label>
+                    <input type="text" id="projectTitle" class="form-input" placeholder="e.g., Awesome App" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="projectTech">Tech Stack</label>
+                    <input type="text" id="projectTech" class="form-input" placeholder="e.g., React / Node.js" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="projectDescription">Description</label>
+                    <textarea id="projectDescription" class="form-textarea" placeholder="Describe your project"
+                        required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="projectImage">Cover Image</label>
+                    <div class="flex flex-col space-y-2">
+                        <input type="url" id="projectImage" class="form-input"
+                            placeholder="https://example.com/image.jpg">
+                        <div class="text-center text-gray-500 text-sm py-1">- OR -</div>
+                        <input type="file" id="projectImageFile" class="form-input" accept="image/*"
+                            onchange="handleImageUpload(event, 'projectImagePreview', 'projectImageBase64')">
+                        <input type="hidden" id="projectImageBase64">
+                        <div id="projectImagePreview"
+                            class="hidden mt-2 w-full h-40 bg-surfaceHighlight border border-white/10 rounded overflow-hidden relative">
+                            <img src="" class="w-full h-full object-cover">
+                            <button type="button"
+                                onclick="clearImageUpload('projectImageFile', 'projectImagePreview', 'projectImageBase64')"
+                                class="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors">
+                                <i data-lucide="x" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeProjectModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Certificate Modal -->
+    <div id="certificateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="certificateModalTitle">Add Certificate</h2>
+                <button class="modal-close" onclick="closeCertificateModal()">×</button>
+            </div>
+            <form id="certificateForm">
+                <div class="form-group">
+                    <label class="form-label" for="certificateTitle">Certificate Title</label>
+                    <input type="text" id="certificateTitle" class="form-input"
+                        placeholder="e.g., AWS Certified Solutions Architect" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="certificateIssuer">Issuer</label>
+                    <input type="text" id="certificateIssuer" class="form-input" placeholder="e.g., Amazon Web Services"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="certificateDate">Date</label>
+                    <input type="text" id="certificateDate" class="form-input" placeholder="e.g., 2024" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="certificateDescription">Description</label>
+                    <textarea id="certificateDescription" class="form-textarea" placeholder="Describe the certificate"
+                        required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="certificateImage">Cover Image</label>
+                    <div class="flex flex-col space-y-2">
+                        <input type="url" id="certificateImage" class="form-input"
+                            placeholder="https://example.com/image.jpg">
+                        <div class="text-center text-gray-500 text-sm py-1">- OR -</div>
+                        <input type="file" id="certificateImageFile" class="form-input" accept="image/*"
+                            onchange="handleImageUpload(event, 'certificateImagePreview', 'certificateImageBase64')">
+                        <input type="hidden" id="certificateImageBase64">
+                        <div id="certificateImagePreview"
+                            class="hidden mt-2 w-full h-40 bg-surfaceHighlight border border-white/10 rounded overflow-hidden relative">
+                            <img src="" class="w-full h-full object-cover">
+                            <button type="button"
+                                onclick="clearImageUpload('certificateImageFile', 'certificateImagePreview', 'certificateImageBase64')"
+                                class="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors">
+                                <i data-lucide="x" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeCertificateModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Certificate</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+    <script src="data-manager.js"></script>
+    <script>
+        // Check authentication
+        if (!DataManager.isSessionValid()) {
+            window.location.href = 'admin.html';
+        }
+
+        let editingSkillIndex = null;
+        let editingProjectIndex = null;
+        let editingCertificateIndex = null;
+        let editingEducationIndex = null;
+        let editingExperienceIndex = null;
+        let editingExpertiseIndex = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            loadOverviewStats();
+            loadAboutData();
+            loadSkillsTable();
+            loadProjectsTable();
+            loadCertificatesTable();
+        });
+
+        // Navigation
+        function switchSection(sectionId) {
+            // Update active section
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+
+            // Update active nav button
+            document.querySelectorAll('.sidebar-nav button').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('button').classList.add('active');
+
+            lucide.createIcons();
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                DataManager.logout();
+                window.location.href = 'admin.html';
+            }
+        }
+
+        // Alert System
+        function showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.innerHTML = `
+                <div class="alert alert-${type}">
+                    ${message}
+                </div>
+            `;
+
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 3000);
+        }
+
+        // Overview Stats
+        async function loadOverviewStats() {
+            const data = await DataManager.fetchData();
+
+            // Count active skills (level > 0)
+            const activeSkills = data.skills ? data.skills.length : 0;
+            document.getElementById('totalSkills').textContent = activeSkills;
+
+            // Count projects
+            const totalProjects = data.projects ? data.projects.length : 0;
+            document.getElementById('totalProjects').textContent = totalProjects;
+
+            // Count certificates
+            const totalCertificates = data.certificates ? data.certificates.length : 0;
+            document.getElementById('totalCertificates').textContent = totalCertificates;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check auth
+            if (!DataManager.isSessionValid()) {
+                window.location.href = 'admin.html';
+                return;
+            }
+
+            toggleLoader(true, 'Initializing Dashboard...');
+            await loadOverviewStats();
+            await loadSkillsTable();
+            await loadProjectsTable();
+            await loadCertificatesTable();
+            toggleLoader(false);
+        });
+        // Overview Stats
+        function loadOverviewStats() {
+            const data = DataManager.loadData();
+            document.getElementById('statSkills').textContent = data.skills.length;
+            document.getElementById('statProjects').textContent = data.projects.length;
+            document.getElementById('statCertificates').textContent = (data.certificates || []).length;
+            document.getElementById('statExperience').textContent = data.about.years;
+        }
+
+        // ===== ABOUT SECTION =====
+
+        function loadAboutData() {
+            const data = DataManager.loadData();
+
+            // Load basic info
+            document.getElementById('aboutYears').value = data.about.years || '';
+            document.getElementById('aboutLocation').value = data.about.location || '';
+            document.getElementById('aboutStatus').value = data.about.status || '';
+            document.getElementById('aboutDescription').value = data.about.description || '';
+            document.getElementById('aboutDetail').value = data.about.detail || '';
+            document.getElementById('aboutPhilosophy').value = data.about.philosophy || '';
+
+            // Load lists
+            loadEducationList();
+            loadExperienceList();
+            loadInterestsList();
+            loadExpertiseList();
+        }
+
+        // Basic Info Form
+        document.getElementById('aboutBasicForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const data = DataManager.loadData();
+
+            data.about.years = document.getElementById('aboutYears').value;
+            data.about.location = document.getElementById('aboutLocation').value;
+            data.about.status = document.getElementById('aboutStatus').value;
+            data.about.description = document.getElementById('aboutDescription').value;
+            data.about.detail = document.getElementById('aboutDetail').value;
+
+            const result = DataManager.saveData(data);
+            if (result.success) {
+                showAlert('Basic information updated successfully!', 'success');
+                loadOverviewStats();
+            } else {
+                showAlert('Failed to update basic information.', 'error');
+            }
+        });
+
+        // Philosophy Form
+        document.getElementById('aboutPhilosophyForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const data = DataManager.loadData();
+
+            data.about.philosophy = document.getElementById('aboutPhilosophy').value;
+
+            const result = DataManager.saveData(data);
+            if (result.success) {
+                showAlert('Philosophy updated successfully!', 'success');
+            } else {
+                showAlert('Failed to update philosophy.', 'error');
+            }
+        });
+
+        // ===== EDUCATION MANAGEMENT =====
+
+        function loadEducationList() {
+            const data = DataManager.loadData();
+            const container = document.getElementById('educationList');
+
+            if (!data.about.education || data.about.education.length === 0) {
+                container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 2rem;">No education entries added yet</p>';
+                return;
+            }
+
+            container.innerHTML = data.about.education.map((edu, index) => `
+                <div style="background: #1E1E1E; border: 1px solid rgba(255,255,255,0.05); padding: 1rem; margin-bottom: 0.75rem; border-radius: 4px;">
+                    <div style="display: flex; justify-between; align-items: start; margin-bottom: 0.5rem;">
+                        <div style="flex: 1;">
+                            <h4 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.25rem;">${edu.degree}</h4>
+                            <p style="color: #EAB308; font-size: 0.875rem; margin-bottom: 0.25rem;">${edu.institution}</p>
+                            <p style="color: #6b7280; font-size: 0.75rem;">${edu.year}</p>
+                        </div>
+                        <div class="table-actions">
+                            <button class="btn btn-secondary btn-small btn-icon" onclick="editEducation(${index})" title="Edit">
+                                <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i>
+                            </button>
+                            <button class="btn btn-danger btn-small btn-icon" onclick="deleteEducation(${index})" title="Delete">
+                                <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p style="color: #9ca3af; font-size: 0.875rem; line-height: 1.5;">${edu.description}</p>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function openEducationModal(index = null) {
+            editingEducationIndex = index;
+            const modal = document.getElementById('educationModal');
+            const title = document.getElementById('educationModalTitle');
+
+            if (index !== null) {
+                const data = DataManager.loadData();
+                const edu = data.about.education[index];
+                title.textContent = 'Edit Education';
+                document.getElementById('educationDegree').value = edu.degree;
+                document.getElementById('educationInstitution').value = edu.institution;
+                document.getElementById('educationYear').value = edu.year;
+                document.getElementById('educationDescription').value = edu.description;
+            } else {
+                title.textContent = 'Add Education';
+                document.getElementById('educationForm').reset();
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeEducationModal() {
+            document.getElementById('educationModal').classList.remove('active');
+            document.getElementById('educationForm').reset();
+            editingEducationIndex = null;
+        }
+
+        function editEducation(index) {
+            openEducationModal(index);
+        }
+
+        function deleteEducation(index) {
+            if (confirm('Are you sure you want to delete this education entry?')) {
+                const data = DataManager.loadData();
+                data.about.education.splice(index, 1);
+                const result = DataManager.saveData(data);
+                if (result.success) {
+                    showAlert('Education entry deleted successfully!', 'success');
+                    loadEducationList();
+                } else {
+                    showAlert('Failed to delete education entry.', 'error');
+                }
+            }
+        }
+
+        document.getElementById('educationForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const education = {
+                degree: document.getElementById('educationDegree').value,
+                institution: document.getElementById('educationInstitution').value,
+                year: document.getElementById('educationYear').value,
+                description: document.getElementById('educationDescription').value
+            };
+
+            const data = DataManager.loadData();
+            if (!data.about.education) data.about.education = [];
+
+            if (editingEducationIndex !== null) {
+                data.about.education[editingEducationIndex] = education;
+            } else {
+                data.about.education.push(education);
+            }
+
+            const result = DataManager.saveData(data);
+            if (result.success) {
+                showAlert(editingEducationIndex !== null ? 'Education updated successfully!' : 'Education added successfully!', 'success');
+                loadEducationList();
+                closeEducationModal();
+            } else {
+                showAlert('Failed to save education.', 'error');
+            }
+        });
+
+        // --- IMAGE UPLOAD HANDLERS ---
+        function handleImageUpload(event, previewId, hiddenInputId) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Size validation (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showAlert('Image size too large! Please use an image smaller than 5MB.', 'error');
+                event.target.value = ''; // Clear input
+                return;
+            }
+
+            // Compress and resize image before saving
+            compressImage(file, (compressedBase64) => {
+                // Update hidden input
+                document.getElementById(hiddenInputId).value = compressedBase64;
+
+                // Show preview
+                const previewContainer = document.getElementById(previewId);
+                previewContainer.classList.remove('hidden');
+                previewContainer.querySelector('img').src = compressedBase64;
+            });
+        }
+
+        // Image compression function
+        function compressImage(file, callback) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.onload = function () {
+                    // Create canvas
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    // Calculate new dimensions (max 1200px on longest side)
+                    const maxSize = 1200;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > maxSize) {
+                            height = (height * maxSize) / width;
+                            width = maxSize;
+                        }
+                    } else {
+                        if (height > maxSize) {
+                            width = (width * maxSize) / height;
+                            height = maxSize;
+                        }
+                    }
+
+                    // Set canvas size and draw image
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Convert to base64 with compression (0.8 quality for JPEG)
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                    callback(compressedBase64);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearImageUpload(fileInputId, previewId, hiddenInputId) {
+            document.getElementById(fileInputId).value = '';
+            document.getElementById(hiddenInputId).value = '';
+            document.getElementById(previewId).classList.add('hidden');
+            document.getElementById(previewId).querySelector('img').src = '';
+        }
+
+        // --- PROJECT MANAGEMENT ---=====
+
+        function loadExperienceList() {
+            const data = DataManager.loadData();
+            const container = document.getElementById('experienceList');
+
+            if (!data.about.experience || data.about.experience.length === 0) {
+                container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 2rem;">No experience entries added yet</p>';
+                return;
+            }
+
+            container.innerHTML = data.about.experience.map((exp, index) => `
+                <div style="background: #1E1E1E; border: 1px solid rgba(255,255,255,0.05); padding: 1rem; margin-bottom: 0.75rem; border-radius: 4px;">
+                    <div style="display: flex; justify-between; align-items: start; margin-bottom: 0.5rem;">
+                        <div style="flex: 1;">
+                            <h4 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.25rem;">${exp.role}</h4>
+                            <p style="color: #EAB308; font-size: 0.875rem; margin-bottom: 0.25rem;">${exp.company}</p>
+                            <p style="color: #6b7280; font-size: 0.75rem;">${exp.period}</p>
+                        </div>
+                        <div class="table-actions">
+                            <button class="btn btn-secondary btn-small btn-icon" onclick="editExperience(${index})" title="Edit">
+                                <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i>
+                            </button>
+                            <button class="btn btn-danger btn-small btn-icon" onclick="deleteExperience(${index})" title="Delete">
+                                <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p style="color: #9ca3af; font-size: 0.875rem; line-height: 1.5;">${exp.description}</p>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function openExperienceModal(index = null) {
+            editingExperienceIndex = index;
+            const modal = document.getElementById('experienceModal');
+            const title = document.getElementById('experienceModalTitle');
+
+            if (index !== null) {
+                const data = DataManager.loadData();
+                const exp = data.about.experience[index];
+                title.textContent = 'Edit Experience';
+                document.getElementById('experienceRole').value = exp.role;
+                document.getElementById('experienceCompany').value = exp.company;
+                document.getElementById('experiencePeriod').value = exp.period;
+                document.getElementById('experienceDescription').value = exp.description;
+            } else {
+                title.textContent = 'Add Experience';
+                document.getElementById('experienceForm').reset();
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeExperienceModal() {
+            document.getElementById('experienceModal').classList.remove('active');
+            document.getElementById('experienceForm').reset();
+            editingExperienceIndex = null;
+        }
+
+        function editExperience(index) {
+            openExperienceModal(index);
+        }
+
+        function deleteExperience(index) {
+            if (confirm('Are you sure you want to delete this experience entry?')) {
+                const data = DataManager.loadData();
+                data.about.experience.splice(index, 1);
+                const result = DataManager.saveData(data);
+                if (result.success) {
+                    showAlert('Experience entry deleted successfully!', 'success');
+                    loadExperienceList();
+                } else {
+                    showAlert('Failed to delete experience entry.', 'error');
+                }
+            }
+        }
+
+        document.getElementById('experienceForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const experience = {
+                role: document.getElementById('experienceRole').value,
+                company: document.getElementById('experienceCompany').value,
+                period: document.getElementById('experiencePeriod').value,
+                description: document.getElementById('experienceDescription').value
+            };
+
+            const data = DataManager.loadData();
+            if (!data.about.experience) data.about.experience = [];
+
+            if (editingExperienceIndex !== null) {
+                data.about.experience[editingExperienceIndex] = experience;
+            } else {
+                data.about.experience.push(experience);
+            }
+
+            const result = DataManager.saveData(data);
+            if (result.success) {
+                showAlert(editingExperienceIndex !== null ? 'Experience updated successfully!' : 'Experience added successfully!', 'success');
+                loadExperienceList();
+                closeExperienceModal();
+            } else {
+                showAlert('Failed to save experience.', 'error');
+            }
+        });
+
+        // ===== INTERESTS MANAGEMENT =====
+
+        function loadInterestsList() {
+            const data = DataManager.loadData();
+            const container = document.getElementById('interestsList');
+
+            if (!data.about.interests || data.about.interests.length === 0) {
+                container.innerHTML = '<p style="color: #6b7280; font-size: 0.875rem;">No interests added yet</p>';
+                return;
+            }
+
+            container.innerHTML = data.about.interests.map((interest, index) => `
+                <span style="background: #1E1E1E; border: 1px solid rgba(255,255,255,0.1); padding: 0.5rem 0.75rem; border-radius: 4px; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.875rem;">
+                    ${interest}
+                    <button onclick="deleteInterest(${index})" style="background: none; border: none; color: #ef4444; cursor: pointer; padding: 0; display: flex; align-items: center;">
+                        <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+                    </button>
+                </span>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function addInterest() {
+            const input = document.getElementById('interestInput');
+            const value = input.value.trim();
+
+            if (!value) return;
+
+            const data = DataManager.loadData();
+            if (!data.about.interests) data.about.interests = [];
+
+            data.about.interests.push(value);
+            const result = DataManager.saveData(data);
+
+            if (result.success) {
+                input.value = '';
+                loadInterestsList();
+                showAlert('Interest added successfully!', 'success');
+            } else {
+                showAlert('Failed to add interest.', 'error');
+            }
+        }
+
+        function deleteInterest(index) {
+            const data = DataManager.loadData();
+            data.about.interests.splice(index, 1);
+            const result = DataManager.saveData(data);
+
+            if (result.success) {
+                loadInterestsList();
+                showAlert('Interest removed successfully!', 'success');
+            } else {
+                showAlert('Failed to remove interest.', 'error');
+            }
+        }
+
+        // Allow Enter key to add interest
+        document.getElementById('interestInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addInterest();
+            }
+        });
+
+        // ===== EXPERTISE MANAGEMENT =====
+
+        function loadExpertiseList() {
+            const data = DataManager.loadData();
+            const container = document.getElementById('expertiseList');
+
+            if (!data.about.expertise || data.about.expertise.length === 0) {
+                container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 2rem;">No expertise areas added yet</p>';
+                return;
+            }
+
+            container.innerHTML = data.about.expertise.map((exp, index) => `
+                <div style="background: #1E1E1E; border: 1px solid rgba(255,255,255,0.05); padding: 1rem; margin-bottom: 0.75rem; border-radius: 4px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <h4 style="font-size: 1rem; font-weight: 600; flex: 1;">${exp.area}</h4>
+                        <div class="table-actions" style="flex-shrink: 0;">
+                            <button class="btn btn-secondary btn-small btn-icon" onclick="editExpertise(${index})" title="Edit">
+                                <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i>
+                            </button>
+                            <button class="btn btn-danger btn-small btn-icon" onclick="deleteExpertise(${index})" title="Delete">
+                                <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p style="color: #9ca3af; font-size: 0.875rem; line-height: 1.5;">${exp.description}</p>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function openExpertiseModal(index = null) {
+            editingExpertiseIndex = index;
+            const modal = document.getElementById('expertiseModal');
+            const title = document.getElementById('expertiseModalTitle');
+
+            if (index !== null) {
+                const data = DataManager.loadData();
+                const exp = data.about.expertise[index];
+                title.textContent = 'Edit Expertise';
+                document.getElementById('expertiseArea').value = exp.area;
+                document.getElementById('expertiseDescription').value = exp.description;
+            } else {
+                title.textContent = 'Add Expertise';
+                document.getElementById('expertiseForm').reset();
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeExpertiseModal() {
+            document.getElementById('expertiseModal').classList.remove('active');
+            document.getElementById('expertiseForm').reset();
+            editingExpertiseIndex = null;
+        }
+
+        function editExpertise(index) {
+            openExpertiseModal(index);
+        }
+
+        function deleteExpertise(index) {
+            if (confirm('Are you sure you want to delete this expertise area?')) {
+                const data = DataManager.loadData();
+                data.about.expertise.splice(index, 1);
+                const result = DataManager.saveData(data);
+                if (result.success) {
+                    showAlert('Expertise area deleted successfully!', 'success');
+                    loadExpertiseList();
+                } else {
+                    showAlert('Failed to delete expertise area.', 'error');
+                }
+            }
+        }
+
+        document.getElementById('expertiseForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const expertise = {
+                area: document.getElementById('expertiseArea').value,
+                description: document.getElementById('expertiseDescription').value
+            };
+
+            const data = DataManager.loadData();
+            if (!data.about.expertise) data.about.expertise = [];
+
+            if (editingExpertiseIndex !== null) {
+                data.about.expertise[editingExpertiseIndex] = expertise;
+            } else {
+                data.about.expertise.push(expertise);
+            }
+
+            const result = DataManager.saveData(data);
+            if (result.success) {
+                showAlert(editingExpertiseIndex !== null ? 'Expertise updated successfully!' : 'Expertise added successfully!', 'success');
+                loadExpertiseList();
+                closeExpertiseModal();
+            } else {
+                showAlert('Failed to save expertise.', 'error');
+            }
+        });
+
+        // Skills Management
+        async function loadSkillsTable() {
+            toggleLoader(true, 'Loading Skills...');
+            const data = await DataManager.fetchData();
+            toggleLoader(false);
+
+            const tbody = document.getElementById('skillsTableBody');
+
+            if (data.skills.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #6b7280;">No skills added yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.skills.map((skill, index) => `
+                <tr draggable="true" data-index="${index}">
+                    <td>
+                        <div class="drag-handle">
+                            <i data-lucide="grip-vertical" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </td>
+                    <td><div class="text-truncate" title="${skill.name}"><strong>${skill.name}</strong></div></td>
+                    <td><div class="text-truncate" title="${skill.category}">${skill.category}</div></td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="flex: 1; background: #1E1E1E; height: 8px; border-radius: 4px; overflow: hidden;">
+                                <div style="width: ${skill.level}%; height: 100%; background: #EAB308;"></div>
+                            </div>
+                            <span style="min-width: 40px;">${skill.level}%</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="table-actions">
+                            <button class="btn btn-secondary btn-small btn-icon" onclick="editSkill(${index})" title="Edit">
+                                <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i>
+                            </button>
+                            <button class="btn btn-danger btn-small btn-icon" onclick="deleteSkill(${index})" title="Delete">
+                                <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function openSkillModal(index = null) {
+            editingSkillIndex = index;
+            const modal = document.getElementById('skillModal');
+            const title = document.getElementById('skillModalTitle');
+
+            if (index !== null) {
+                const data = DataManager.loadData();
+                const skill = data.skills[index];
+                title.textContent = 'Edit Skill';
+                document.getElementById('skillName').value = skill.name;
+                document.getElementById('skillCategory').value = skill.category;
+                document.getElementById('skillLevel').value = skill.level;
+            } else {
+                title.textContent = 'Add Skill';
+                document.getElementById('skillForm').reset();
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeSkillModal() {
+            document.getElementById('skillModal').classList.remove('active');
+            document.getElementById('skillForm').reset();
+            editingSkillIndex = null;
+        }
+
+        function editSkill(index) {
+            openSkillModal(index);
+        }
+
+        async function deleteSkill(index) {
+            if (confirm('Are you sure you want to delete this skill?')) {
+                toggleLoader(true, 'Deleting Skill...');
+                const data = await DataManager.fetchData();
+                data.skills.splice(index, 1);
+
+                const result = await DataManager.pushData(data);
+
+                if (result.success) {
+                    showAlert('Skill deleted successfully!', 'success');
+                    await loadSkillsTable();
+                    await loadOverviewStats();
+                } else {
+                    showAlert('Failed to delete skill: ' + result.message, 'error');
+                }
+                toggleLoader(false);
+            }
+        }
+
+        document.getElementById('skillForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            toggleLoader(true, 'Saving Skill...');
+
+            const data = await DataManager.fetchData();
+            const skill = {
+                name: document.getElementById('skillName').value,
+                category: document.getElementById('skillCategory').value,
+                level: parseInt(document.getElementById('skillLevel').value)
+            };
+
+            if (editingSkillIndex !== null) {
+                data.skills[editingSkillIndex] = skill;
+            } else {
+                data.skills.push(skill);
+            }
+
+            const result = await DataManager.pushData(data);
+
+            if (result.success) {
+                showAlert(editingSkillIndex !== null ? 'Skill updated successfully!' : 'Skill added successfully!', 'success');
+                await loadSkillsTable();
+                await loadOverviewStats();
+                closeSkillModal();
+            } else {
+                showAlert('Failed to save skill: ' + result.message, 'error');
+            }
+            toggleLoader(false);
+        });
+
+        // Projects Management
+        async function loadProjectsTable() {
+            toggleLoader(true, 'Loading Projects...');
+            const data = await DataManager.fetchData();
+            toggleLoader(false);
+
+            const tbody = document.getElementById('projectsTableBody');
+
+            if (data.projects.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #6b7280;">No projects added yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.projects.map((project, index) => {
+                const imageUrl = project.image || 'https://via.placeholder.com/80x60?text=No+Image';
+                return `
+                <tr draggable="true" data-index="${index}">
+                    <td>
+                        <div class="drag-handle">
+                            <i data-lucide="grip-vertical" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="width: 60px; height: 45px; overflow: hidden; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);">
+                            <img src="${imageUrl}" alt="${project.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="text-truncate" title="${project.title}"><strong>${project.title}</strong></div>
+                    </td>
+                    <td><span style="background: #EAB308; color: #000; padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600;">${project.tech}</span></td>
+                    <td>
+                        <div class="text-clamp-2" title="${project.description}">${project.description}</div>
+                    </td>
+                    <td>
+                        <div class="table-actions">
+                            <button class="btn btn-secondary btn-small btn-icon" onclick="editProject(${index})" title="Edit">
+                                <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i>
+                            </button>
+                            <button class="btn btn-danger btn-small btn-icon" onclick="deleteProject(${index})" title="Delete">
+                                <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `}).join('');
+
+            lucide.createIcons();
+        }
+
+        function openProjectModal(index = null) {
+            editingProjectIndex = index;
+            const modal = document.getElementById('projectModal');
+            const title = document.getElementById('projectModalTitle');
+
+            if (index !== null) {
+                const data = DataManager.loadData();
+                const project = data.projects[index];
+                title.textContent = 'Edit Project';
+                document.getElementById('projectTitle').value = project.title;
+                document.getElementById('projectTech').value = project.tech;
+                document.getElementById('projectDescription').value = project.description;
+
+                // Handle Image (URL or Base64)
+                const image = project.image || '';
+                if (image.startsWith('data:image')) {
+                    document.getElementById('projectImageBase64').value = image;
+                    document.getElementById('projectImage').value = ''; // Clear URL input
+                    const preview = document.getElementById('projectImagePreview');
+                    preview.classList.remove('hidden');
+                    preview.querySelector('img').src = image;
+                } else {
+                    document.getElementById('projectImage').value = image;
+                    document.getElementById('projectImageBase64').value = '';
+                    document.getElementById('projectImagePreview').classList.add('hidden');
+                }
+            } else {
+                title.textContent = 'Add Project';
+                document.getElementById('projectForm').reset();
+                document.getElementById('projectImageBase64').value = '';
+                document.getElementById('projectImagePreview').classList.add('hidden');
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeProjectModal() {
+            document.getElementById('projectModal').classList.remove('active');
+            document.getElementById('projectForm').reset();
+            editingProjectIndex = null;
+        }
+
+        function editProject(index) {
+            openProjectModal(index);
+        }
+
+        async function deleteProject(index) {
+            if (confirm('Are you sure you want to delete this project?')) {
+                toggleLoader(true, 'Deleting Project...');
+                const data = await DataManager.fetchData();
+                data.projects.splice(index, 1);
+
+                const result = await DataManager.pushData(data);
+
+                if (result.success) {
+                    showAlert('Project deleted successfully!', 'success');
+                    await loadProjectsTable();
+                    await loadOverviewStats();
+                } else {
+                    showAlert('Failed to delete project: ' + result.message, 'error');
+                }
+                toggleLoader(false);
+            }
+        }
+
+        document.getElementById('projectForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            toggleLoader(true, 'Saving Project...');
+
+            try {
+                const data = await DataManager.fetchData();
+
+                // Handle Image Upload
+                let imageUrl = document.getElementById('projectImageBase64').value;
+                const fileInput = document.getElementById('projectImageFile');
+
+                if (fileInput.files.length > 0) {
+                    toggleLoader(true, 'Uploading Image...');
+                    imageUrl = await DataManager.uploadImage(fileInput.files[0], 'projects');
+                }
+
+                const project = {
+                    title: document.getElementById('projectTitle').value,
+                    tech: document.getElementById('projectTech').value,
+                    description: document.getElementById('projectDescription').value,
+                    link: document.getElementById('projectLink').value,
+                    image: imageUrl
+                };
+
+                if (editingProjectIndex !== null) {
+                    data.projects[editingProjectIndex] = project;
+                } else {
+                    data.projects.push(project);
+                }
+
+                toggleLoader(true, 'Saving Data...');
+                const result = await DataManager.pushData(data);
+
+                if (result.success) {
+                    showAlert(editingProjectIndex !== null ? 'Project updated successfully!' : 'Project added successfully!', 'success');
+                    await loadProjectsTable();
+                    await loadOverviewStats();
+                    closeProjectModal();
+                } else {
+                    showAlert('Failed to save project: ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                showAlert('Error: ' + error.message, 'error');
+            } finally {
+                toggleLoader(false);
+            }
+        });
+
+        // Certificates Management
+        async function loadCertificatesTable() {
+            toggleLoader(true, 'Loading Certificates...');
+            const data = await DataManager.fetchData();
+            toggleLoader(false);
+
+            const tbody = document.getElementById('certificatesTableBody');
+
+            if (!data.certificates || data.certificates.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #6b7280;">No certificates added yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.certificates.map((cert, index) => {
+                const imageUrl = cert.image || 'https://via.placeholder.com/80x60?text=No+Image';
+                return `
+                <tr draggable="true" data-index="${index}">
+                    <td>
+                        <div class="drag-handle">
+                            <i data-lucide="grip-vertical" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="width: 60px; height: 45px; overflow: hidden; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);">
+                            <img src="${imageUrl}" alt="${cert.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="text-truncate" title="${cert.title}"><strong>${cert.title}</strong></div>
+                    </td>
+                    <td>
+                        <div class="text-truncate" title="${cert.issuer}">${cert.issuer}</div>
+                    </td>
+                    <td><span style="background: #EAB308; color: #000; padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600;">${cert.date}</span></td>
+                    <td>
+                        <div class="text-clamp-2" title="${cert.description}">${cert.description}</div>
+                    </td>
+                    <td>
+                        <div class="table-actions">
+                            <button class="btn btn-secondary btn-small btn-icon" onclick="editCertificate(${index})" title="Edit">
+                                <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i>
+                            </button>
+                            <button class="btn btn-danger btn-small btn-icon" onclick="deleteCertificate(${index})" title="Delete">
+                                <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `}).join('');
+
+            lucide.createIcons();
+        }
+
+        function openCertificateModal(index = null) {
+            editingCertificateIndex = index;
+            const modal = document.getElementById('certificateModal');
+            const title = document.getElementById('certificateModalTitle');
+
+            if (index !== null) {
+                const data = DataManager.loadData();
+                const certificate = data.certificates[index];
+                title.textContent = 'Edit Certificate';
+                document.getElementById('certificateTitle').value = certificate.title;
+                document.getElementById('certificateIssuer').value = certificate.issuer;
+                document.getElementById('certificateDate').value = certificate.date;
+                document.getElementById('certificateDescription').value = certificate.description;
+
+                // Handle Image (URL or Base64)
+                const image = certificate.image || '';
+                if (image.startsWith('data:image')) {
+                    document.getElementById('certificateImageBase64').value = image;
+                    document.getElementById('certificateImage').value = ''; // Clear URL input
+                    const preview = document.getElementById('certificateImagePreview');
+                    preview.classList.remove('hidden');
+                    preview.querySelector('img').src = image;
+                } else {
+                    document.getElementById('certificateImage').value = image;
+                    document.getElementById('certificateImageBase64').value = '';
+                    document.getElementById('certificateImagePreview').classList.add('hidden');
+                }
+            } else {
+                title.textContent = 'Add Certificate';
+                document.getElementById('certificateForm').reset();
+                document.getElementById('certificateImageBase64').value = '';
+                document.getElementById('certificateImagePreview').classList.add('hidden');
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeCertificateModal() {
+            document.getElementById('certificateModal').classList.remove('active');
+            document.getElementById('certificateForm').reset();
+            editingCertificateIndex = null;
+        }
+
+        function editCertificate(index) {
+            openCertificateModal(index);
+        }
+
+        async function deleteCertificate(index) {
+            if (confirm('Are you sure you want to delete this certificate?')) {
+                toggleLoader(true, 'Deleting Certificate...');
+                const data = await DataManager.fetchData();
+                data.certificates.splice(index, 1);
+
+                const result = await DataManager.pushData(data);
+
+                if (result.success) {
+                    showAlert('Certificate deleted successfully!', 'success');
+                    await loadCertificatesTable();
+                    await loadOverviewStats();
+                } else {
+                    showAlert('Failed to delete certificate: ' + result.message, 'error');
+                }
+                toggleLoader(false);
+            }
+        }
+
+        document.getElementById('certificateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            toggleLoader(true, 'Saving Certificate...');
+
+            try {
+                const data = await DataManager.fetchData();
+
+                // Handle Image Upload
+                let imageUrl = document.getElementById('certificateImageBase64').value;
+                const fileInput = document.getElementById('certificateImageFile');
+
+                if (fileInput.files.length > 0) {
+                    toggleLoader(true, 'Uploading Image...');
+                    imageUrl = await DataManager.uploadImage(fileInput.files[0], 'certificates');
+                }
+
+                const cert = {
+                    title: document.getElementById('certificateTitle').value,
+                    issuer: document.getElementById('certificateIssuer').value,
+                    date: document.getElementById('certificateDate').value,
+                    description: document.getElementById('certificateDescription').value,
+                    image: imageUrl
+                };
+
+                if (editingCertificateIndex !== null) {
+                    data.certificates[editingCertificateIndex] = cert;
+                } else {
+                    if (!data.certificates) data.certificates = [];
+                    data.certificates.push(cert);
+                }
+
+                toggleLoader(true, 'Saving Data...');
+                const result = await DataManager.pushData(data);
+
+                if (result.success) {
+                    showAlert(editingCertificateIndex !== null ? 'Certificate updated successfully!' : 'Certificate added successfully!', 'success');
+                    await loadCertificatesTable();
+                    await loadOverviewStats();
+                    closeCertificateModal();
+                } else {
+                    showAlert('Failed to save certificate: ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                showAlert('Error: ' + error.message, 'error');
+            } finally {
+                toggleLoader(false);
+            }
+        });
+
+        // Settings
+        document.getElementById('passwordForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                showAlert('Passwords do not match!', 'error');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showAlert('Password must be at least 6 characters long!', 'error');
+                return;
+            }
+
+            DataManager.setPassword(newPassword);
+            showAlert('Password updated successfully!', 'success');
+            document.getElementById('passwordForm').reset();
+        });
+
+        function exportData() {
+            DataManager.exportData();
+            showAlert('Data exported successfully!', 'success');
+        }
+
+        async function importData(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            try {
+                const result = await DataManager.importData(file);
+                showAlert(result.message, 'success');
+                loadOverviewStats();
+                loadAboutData();
+                loadSkillsTable();
+                loadProjectsTable();
+                loadCertificatesTable();
+            } catch (error) {
+                showAlert(error.message, 'error');
+            }
+
+            input.value = '';
+        }
+
+        // Close modals on outside click
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+        // --- Drag and Drop Logic ---
+        function initDragAndDrop(tableId, dataKey, loadFunction) {
+            const tableBody = document.getElementById(tableId);
+            let draggedRow = null;
+
+            tableBody.addEventListener('dragstart', (e) => {
+                draggedRow = e.target.closest('tr');
+                if (!draggedRow) return;
+
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', draggedRow.dataset.index);
+                draggedRow.classList.add('dragging');
+            });
+
+            tableBody.addEventListener('dragend', () => {
+                if (draggedRow) {
+                    draggedRow.classList.remove('dragging');
+                    draggedRow = null;
+                }
+                document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+            });
+
+            tableBody.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const targetRow = e.target.closest('tr');
+                if (!targetRow || targetRow === draggedRow) return;
+
+                document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+                targetRow.classList.add('drag-over');
+            });
+
+            tableBody.addEventListener('drop', async (e) => {
+                e.preventDefault();
+                const targetRow = e.target.closest('tr');
+                if (!targetRow || targetRow === draggedRow) return;
+
+                const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                const toIndex = parseInt(targetRow.dataset.index);
+
+                if (fromIndex === toIndex) return;
+
+                toggleLoader(true, 'Updating Order...');
+                try {
+                    // Update Data
+                    const data = await DataManager.fetchData();
+                    const items = data[dataKey];
+
+                    // Handle case where items might be undefined (e.g. certificates)
+                    if (!items) return;
+
+                    const [movedItem] = items.splice(fromIndex, 1);
+                    items.splice(toIndex, 0, movedItem);
+
+                    const result = await DataManager.pushData(data);
+
+                    if (result.success) {
+                        // Reload Table
+                        await loadFunction();
+                        showAlert('Order updated successfully!', 'success');
+                    } else {
+                        showAlert('Failed to update order: ' + result.message, 'error');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    showAlert('Error reordering: ' + error.message, 'error');
+                } finally {
+                    toggleLoader(false);
+                }
+            });
+        }
+
+        // Initialize Drag and Drop
+        document.addEventListener('DOMContentLoaded', () => {
+            initDragAndDrop('skillsTableBody', 'skills', loadSkillsTable);
+            initDragAndDrop('projectsTableBody', 'projects', loadProjectsTable);
+            initDragAndDrop('certificatesTableBody', 'certificates', loadCertificatesTable);
+        });
+
+        // Loading State Helper
+        function toggleLoader(show, text = 'Processing...') {
+            const loader = document.getElementById('globalLoader');
+            const textEl = document.getElementById('loadingText');
+            if (show) {
+                textEl.textContent = text;
+                loader.classList.add('active');
+            } else {
+                loader.classList.remove('active');
+            }
+        }
+
+        // Manual Sync Function
+        async function syncToCloud() {
+            if (!confirm('This will overwrite cloud data with your current local data. Continue?')) return;
+
+            toggleLoader(true, 'Syncing to Cloud...');
+            try {
+                // Force load from LocalStorage
+                const localData = DataManager.loadData();
+                const result = await DataManager.pushData(localData);
+
+                if (result.success) {
+                    showAlert('Data synced to cloud successfully!', 'success');
+                } else {
+                    showAlert('Sync failed: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showAlert('Error syncing: ' + error.message, 'error');
+            } finally {
+                toggleLoader(false);
+            }
+        }
+    </script>
+</body>
+
+</html>

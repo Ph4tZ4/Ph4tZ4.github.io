@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIKANOMWAAN.CODE | Dynamic Portfolio</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Data Manager -->
+    <!-- Data Manager -->
+    <!-- Firebase SDK (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+    <script src="data-manager.js"></script>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#EAB308', // Yellow-500
+                        dark: '#050505',
+                        surface: '#121212',
+                        surfaceHighlight: '#1E1E1E'
+                    },
+                    fontFamily: {
+                        display: ['Chakra Petch', 'sans-serif'],
+                        body: ['Chakra Petch', 'sans-serif']
+                    },
+                    cursor: {
+                        'none': 'none',
+                    },
+                    animation: {
+                        'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- GSAP for High-End Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #EAB308;
+        }
+
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Grain Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 90;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Custom Cursor */
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #EAB308;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(234, 179, 8, 0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        /* Utilities */
+        .text-stroke {
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+            color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .text-stroke:hover {
+            -webkit-text-stroke: 1px #EAB308;
+            color: #EAB308;
+        }
+
+        /* Page Transitions */
+        .page-transition-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #EAB308;
+            z-index: 100;
+            transform: scaleY(0);
+            transform-origin: bottom;
+        }
+
+        /* AI Typing Effect */
+        .typing-cursor::after {
+            content: '▋';
+            animation: blink 1s step-start infinite;
+            color: #EAB308;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* 3D Background Container */
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Transition Overlay -->
+    <div class="page-transition-layer" id="transitionLayer"></div>
+
+    <!-- Noise -->
+    <div class="noise-overlay"></div>
+
+    <!-- Cursor -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <!-- Navigation -->
+    <nav
+        class="fixed top-0 left-0 w-full z-50 px-6 py-6 flex justify-between items-center mix-blend-difference text-white">
+        <div class="font-display font-bold text-2xl tracking-tighter text-primary cursor-pointer"
+            onclick="handleLogoClick()">
+            PIKANOMWAAN<span class="text-white">.CODE</span>
+        </div>
+
+        <div class="hidden md:flex space-x-12 font-body text-sm tracking-widest uppercase">
+            <button onclick="router('about')" class="hover:text-primary transition-colors relative group">About<span
+                    class="absolute -bottom-1 left-0 w-0 h-[1px] bg-primary transition-all group-hover:w-full"></span></button>
+            <button onclick="router('skills')" class="hover:text-primary transition-colors relative group">Skills<span
+                    class="absolute -bottom-1 left-0 w-0 h-[1px] bg-primary transition-all group-hover:w-full"></span></button>
+            <button onclick="router('projects')"
+                class="hover:text-primary transition-colors relative group">Projects<span
+                    class="absolute -bottom-1 left-0 w-0 h-[1px] bg-primary transition-all group-hover:w-full"></span></button>
+            <button onclick="router('certificates')"
+                class="hover:text-primary transition-colors relative group">Certificates<span
+                    class="absolute -bottom-1 left-0 w-0 h-[1px] bg-primary transition-all group-hover:w-full"></span></button>
+            <button onclick="router('contact')" class="hover:text-primary transition-colors relative group">Contact<span
+                    class="absolute -bottom-1 left-0 w-0 h-[1px] bg-primary transition-all group-hover:w-full"></span></button>
+        </div>
+
+        <button class="md:hidden text-white" onclick="toggleMobileMenu()"><i data-lucide="menu"></i></button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu"
+        class="fixed inset-0 bg-black z-40 flex flex-col items-center justify-center space-y-8 opacity-0 pointer-events-none transition-opacity duration-300">
+        <button onclick="router('about'); toggleMobileMenu()"
+            class="text-3xl font-display hover:text-primary">About</button>
+        <button onclick="router('skills'); toggleMobileMenu()"
+            class="text-3xl font-display hover:text-primary">Skills</button>
+        <button onclick="router('projects'); toggleMobileMenu()"
+            class="text-3xl font-display hover:text-primary">Projects</button>
+        <button onclick="router('certificates'); toggleMobileMenu()"
+            class="text-3xl font-display hover:text-primary">Certificates</button>
+        <button onclick="router('contact'); toggleMobileMenu()"
+            class="text-3xl font-display hover:text-primary">Contact</button>
+        <button onclick="toggleMobileMenu()" class="absolute top-6 right-6"><i data-lucide="x"></i></button>
+    </div>
+
+    <!-- Main Content -->
+    <main id="app" class="relative z-10 min-h-screen pt-24 px-4 md:px-12 lg:px-24 pb-24">
+        <!-- Content injected via JS -->
+    </main>
+
+    <script>
+        // --- LOAD DATA FROM LOCALSTORAGE ---
+        const portfolioData = DataManager.loadData();
+
+        // --- AI CONFIGURATION ---
+        // ใส่ API Key ของคุณที่นี่เพื่อเปิดใช้งานฟีเจอร์ AI
+        const apiKey = "";
+
+        // --- SECRET ADMIN ACCESS ---
+        let logoClickCount = 0;
+        let logoClickTimer = null;
+
+        // --- ROUTER & SYSTEM ---
+        let currentPage = 'home';
+        let animationFrameId = null;
+        let threeScene = null;
+        let threeCamera = null;
+        let threeRenderer = null;
+
+        window.onload = () => {
+            router('home');
+            lucide.createIcons();
+        }
+
+        // Secret Admin Access (Click logo 5 times within 2 seconds)
+        // Secret Admin Access (Click logo 5 times within 2 seconds)
+        window.handleLogoClick = () => {
+            logoClickCount++;
+
+            if (logoClickCount === 1) {
+                logoClickTimer = setTimeout(() => {
+                    logoClickCount = 0;
+                }, 2000);
+            }
+
+            if (logoClickCount === 5) {
+                clearTimeout(logoClickTimer);
+                logoClickCount = 0;
+                // Set secret access token
+                sessionStorage.setItem('admin_secret_access', 'true');
+                window.location.href = 'admin.html';
+            } else if (logoClickCount < 5) {
+                router('home');
+            }
+        }
+
+        window.router = async (page) => {
+            const appDiv = document.getElementById('app');
+            const transition = document.getElementById('transitionLayer');
+
+            // Cleanup 3D Background if leaving home or contact
+            if ((currentPage === 'home' || currentPage === 'contact') && page !== currentPage) {
+                cleanup3DBackground();
+            }
+
+            // Animate Out
+            gsap.to(appDiv, { opacity: 0, y: -50, duration: 0.3 });
+
+            // Swipe Transition
+            const tl = gsap.timeline();
+            tl.to(transition, { transformOrigin: 'bottom', scaleY: 1, duration: 0.4, ease: 'power2.inOut' })
+                .add(() => {
+                    currentPage = page;
+                    renderPage(page);
+                    window.scrollTo(0, 0);
+                })
+                .to(transition, { transformOrigin: 'top', scaleY: 0, duration: 0.4, ease: 'power2.inOut', delay: 0.1 })
+                .to(appDiv, { opacity: 1, y: 0, duration: 0.5 });
+        };
+
+        function renderPage(page) {
+            const appDiv = document.getElementById('app');
+            appDiv.innerHTML = ''; // Clear
+
+            switch (page) {
+                case 'home': renderHome(appDiv); break;
+                case 'about': renderAbout(appDiv); break;
+                case 'skills': renderSkills(appDiv); break;
+                case 'projects': renderProjects(appDiv); break;
+                case 'certificates': renderCertificates(appDiv); break;
+                case 'contact': renderContact(appDiv); break;
+            }
+            lucide.createIcons();
+        }
+
+        // --- PAGE RENDERERS ---
+
+        function renderHome(container) {
+            container.innerHTML = `
+                <div id="canvas-container"></div>
+                <div class="h-[80vh] flex flex-col justify-center relative z-10">
+                    <h1 class="font-display font-bold text-[12vw] leading-[0.85] uppercase tracking-tighter mix-blend-exclusion">
+                        <div class="overflow-hidden"><span class="block reveal-text">Kittiphat</span></div>
+                        <div class="overflow-hidden"><span class="block reveal-text text-transparent text-stroke">Developer</span></div>
+                        <div class="overflow-hidden"><span class="block reveal-text text-primary">Portfolio</span></div>
+                    </h1>
+                    
+                    <div class="mt-12 flex items-center space-x-6 opacity-0 fade-in-up">
+                        <p class="font-body text-gray-400 max-w-md text-lg">
+                            I’m a young software developer creating technology that is both functional and inspiring.
+                            Check out more of my work here and on my GitHub!
+                        </p>
+                        <div class="flex space-x-4">
+                            <button onclick="router('projects')" class="px-8 py-4 border border-primary text-primary hover:bg-primary hover:text-black transition-all font-bold tracking-widest uppercase text-sm">
+                                Explore Works
+                            </button>
+                            <a href="Docs/KittiphatCV.pdf" target="_blank" download class="px-8 py-4 border border-white/20 text-white hover:border-primary hover:text-primary transition-all font-bold tracking-widest uppercase text-sm flex items-center justify-center">
+                                Download CV
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="absolute bottom-0 right-0 opacity-0 fade-in-up delay-300">
+                         <span class="font-display text-9xl opacity-10 select-none">2025</span>
+                    </div>
+                </div>
+            `;
+
+            gsap.from(".reveal-text", { y: 200, skewY: 10, duration: 1.2, stagger: 0.1, ease: "power4.out" });
+            gsap.to(".fade-in-up", { opacity: 1, y: 0, duration: 1, delay: 0.5, stagger: 0.2 });
+
+            // Initialize 3D Background
+            setTimeout(init3DBackground, 100);
+        }
+
+        // --- 3D BACKGROUND ---
+        function init3DBackground() {
+            const container = document.getElementById('canvas-container');
+            if (!container) return;
+
+            // Scene setup
+            threeScene = new THREE.Scene();
+            threeCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            threeRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+
+            threeRenderer.setSize(window.innerWidth, window.innerHeight);
+            threeRenderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(threeRenderer.domElement);
+
+            // Particles
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 700;
+
+            const posArray = new Float32Array(particlesCount * 3);
+
+            for (let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 15; // Spread
+            }
+
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+            // Material
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.02,
+                color: 0xEAB308, // Primary color
+                transparent: true,
+                opacity: 0.8,
+            });
+
+            // Mesh
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            threeScene.add(particlesMesh);
+
+            threeCamera.position.z = 3;
+
+            // Mouse interaction (subtle)
+            let mouseX = 0;
+            let mouseY = 0;
+
+            function onDocumentMouseMove(event) {
+                mouseX = event.clientX - window.innerWidth / 2;
+                mouseY = event.clientY - window.innerHeight / 2;
+            }
+
+            document.addEventListener('mousemove', onDocumentMouseMove);
+
+            // Animation Loop
+            const clock = new THREE.Clock();
+
+            function animate() {
+                animationFrameId = requestAnimationFrame(animate);
+                const elapsedTime = clock.getElapsedTime();
+
+                // Rotate entire system
+                particlesMesh.rotation.y = elapsedTime * 0.05;
+                particlesMesh.rotation.x = elapsedTime * 0.02;
+
+                // Subtle mouse parallax
+                particlesMesh.rotation.x += mouseY * 0.00005;
+                particlesMesh.rotation.y += mouseX * 0.00005;
+
+                threeRenderer.render(threeScene, threeCamera);
+            }
+
+            animate();
+
+            // Resize handler
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function onWindowResize() {
+            if (!threeCamera || !threeRenderer) return;
+            threeCamera.aspect = window.innerWidth / window.innerHeight;
+            threeCamera.updateProjectionMatrix();
+            threeRenderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function cleanup3DBackground() {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+
+            if (threeRenderer) {
+                threeRenderer.dispose();
+                const container = document.getElementById('canvas-container');
+                if (container && threeRenderer.domElement) {
+                    container.removeChild(threeRenderer.domElement);
+                }
+                threeRenderer = null;
+            }
+
+            threeScene = null;
+            threeCamera = null;
+
+            window.removeEventListener('resize', onWindowResize);
+            // Note: mousemove listener removal is tricky without named function reference in scope, 
+            // but for this simple implementation it's acceptable or we can refine it.
+        }
+
+        function renderAbout(container) {
+            const data = portfolioData.about;
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-16 mt-12">
+                    <center>
+                    <div class="relative">
+                         <div class="w-[500px] h-[600px] bg-surfaceHighlight border border-white/5 relative overflow-hidden group about-image-container">
+                            <img src="images/Avata.JPG" alt="Profile" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-60"></div>
+                            <div class="absolute bottom-8 left-8 bg-black/80 backdrop-blur border border-white/10 p-6 max-w-xs">
+                                <div class="text-4xl font-display text-primary mb-1">${data.years}</div>
+                                <div class="text-xs uppercase tracking-widest text-gray-400">Years Experience</div>
+                            </div>
+                         </div>
+                    </div>
+                    </center>
+                    
+                    <!-- Scrollable Content Area -->
+                    <div class="flex flex-col justify-start">
+                        <h2 class="font-display text-6xl mb-8 uppercase">Who I Am</h2>
+                        
+                        <!-- Scrollable Container -->
+                        <div class="about-scroll-container max-h-[500px] overflow-y-auto pr-4" style="scrollbar-width: thin; scrollbar-color: #EAB308 #1E1E1E;">
+                            <!-- Introduction -->
+                            <div class="mb-8">
+                                <p class="font-body text-xl text-gray-300 leading-relaxed mb-4">${data.description}</p>
+                                <p class="font-body text-gray-400 leading-relaxed">${data.detail}</p>
+                            </div>
+                            
+                            <!-- Location & Availability -->
+                            <div class="border-t border-white/10 pt-6 pb-6 grid grid-cols-2 gap-8 mb-8">
+                                <div>
+                                    <h4 class="text-primary font-display uppercase text-lg mb-2">Location</h4>
+                                    <p class="text-gray-400">${data.location}</p>
+                                </div>
+                                <div>
+                                    <h4 class="text-primary font-display uppercase text-lg mb-2">Availability</h4>
+                                    <p class="text-gray-400">${data.status}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Education -->
+                            ${data.education ? `
+                            <div class="border-t border-white/10 pt-6 mb-8">
+                                <h3 class="font-display text-2xl text-primary uppercase mb-4 flex items-center">
+                                    <i data-lucide="graduation-cap" class="w-5 h-5 mr-2"></i>
+                                    Education
+                                </h3>
+                                <div class="space-y-4">
+                                    ${data.education.map(edu => `
+                                        <div class="bg-surface/50 border border-white/5 p-4 hover:border-primary/30 transition-all">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <h4 class="font-display text-lg text-white">${edu.degree}</h4>
+                                                <span class="text-xs text-gray-500 uppercase tracking-wider">${edu.year}</span>
+                                            </div>
+                                            <p class="text-primary text-sm mb-2">${edu.institution}</p>
+                                            <p class="text-gray-400 text-sm leading-relaxed">${edu.description}</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            ` : ''}
+                            
+                            <!-- Experience -->
+                            ${data.experience ? `
+                            <div class="border-t border-white/10 pt-6 mb-8">
+                                <h3 class="font-display text-2xl text-primary uppercase mb-4 flex items-center">
+                                    <i data-lucide="briefcase" class="w-5 h-5 mr-2"></i>
+                                    Experience
+                                </h3>
+                                <div class="space-y-4">
+                                    ${data.experience.map((exp, index) => `
+                                        <div class="relative pl-6 border-l-2 ${index === 0 ? 'border-primary' : 'border-white/10'}">
+                                            <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full ${index === 0 ? 'bg-primary' : 'bg-white/20'}"></div>
+                                            <div class="pb-4">
+                                                <div class="flex justify-between items-start mb-2">
+                                                    <h4 class="font-display text-lg text-white">${exp.role}</h4>
+                                                    <span class="text-xs text-gray-500 uppercase tracking-wider">${exp.period}</span>
+                                                </div>
+                                                <p class="text-primary text-sm mb-2">${exp.company}</p>
+                                                <p class="text-gray-400 text-sm leading-relaxed">${exp.description}</p>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            ` : ''}
+                            
+                            <!-- Philosophy -->
+                            ${data.philosophy ? `
+                            <div class="border-t border-white/10 pt-6 mb-8">
+                                <h3 class="font-display text-2xl text-primary uppercase mb-4 flex items-center">
+                                    <i data-lucide="lightbulb" class="w-5 h-5 mr-2"></i>
+                                    Philosophy & Approach
+                                </h3>
+                                <div class="bg-surface/50 border border-white/5 p-5 border-l-2 border-l-primary">
+                                    <p class="text-gray-300 leading-relaxed italic">"${data.philosophy}"</p>
+                                </div>
+                            </div>
+                            ` : ''}
+                            
+                            <!-- Expertise -->
+                            ${data.expertise ? `
+                            <div class="border-t border-white/10 pt-6 mb-8">
+                                <h3 class="font-display text-2xl text-primary uppercase mb-4 flex items-center">
+                                    <i data-lucide="zap" class="w-5 h-5 mr-2"></i>
+                                    Technical Expertise
+                                </h3>
+                                <div class="grid grid-cols-1 gap-3">
+                                    ${data.expertise.map(exp => `
+                                        <div class="bg-surface/50 border border-white/5 p-4 hover:border-primary/30 transition-all group">
+                                            <h4 class="font-display text-base text-white mb-2 group-hover:text-primary transition-colors">${exp.area}</h4>
+                                            <p class="text-gray-400 text-sm leading-relaxed">${exp.description}</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            ` : ''}
+                            
+                            <!-- Interests -->
+                            ${data.interests ? `
+                            <div class="border-t border-white/10 pt-6 mb-4">
+                                <h3 class="font-display text-2xl text-primary uppercase mb-4 flex items-center">
+                                    <i data-lucide="heart" class="w-5 h-5 mr-2"></i>
+                                    Interests & Hobbies
+                                </h3>
+                                <div class="flex flex-wrap gap-2">
+                                    ${data.interests.map(interest => `
+                                        <span class="bg-surface border border-white/10 px-4 py-2 text-sm text-gray-300 hover:border-primary hover:text-primary transition-all cursor-default">
+                                            ${interest}
+                                        </span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+                
+                <style>
+                    /* Custom Scrollbar for About Section */
+                    .about-scroll-container::-webkit-scrollbar {
+                        width: 8px;
+                    }
+                    
+                    .about-scroll-container::-webkit-scrollbar-track {
+                        background: #1E1E1E;
+                        border-radius: 4px;
+                    }
+                    
+                    .about-scroll-container::-webkit-scrollbar-thumb {
+                        background: #EAB308;
+                        border-radius: 4px;
+                    }
+                    
+                    .about-scroll-container::-webkit-scrollbar-thumb:hover {
+                        background: #FCD34D;
+                    }
+                    
+                    /* Smooth scrolling */
+                    .about-scroll-container {
+                        scroll-behavior: smooth;
+                    }
+                </style>
+            `;
+            gsap.from(container.children, { opacity: 0, y: 20, duration: 0.8, stagger: 0.2 });
+            lucide.createIcons();
+        }
+
+        function renderSkills(container) {
+            container.innerHTML = `
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+                    <h2 class="font-display text-6xl uppercase">Technical Arsenal</h2>
+                    <button id="aiDiagnosticBtn" class="bg-surface border border-primary/30 hover:border-primary px-6 py-3 flex items-center space-x-3 group transition-all">
+                        <i data-lucide="sparkles" class="text-primary w-4 h-4"></i>
+                        <span class="text-xs font-bold uppercase tracking-widest text-gray-300 group-hover:text-primary">Run AI Diagnostic</span>
+                    </button>
+                </div>
+                <div id="aiTerminal" class="hidden mb-12 bg-black/50 border border-primary/20 p-6 font-mono text-sm text-primary/80 min-h-[100px] relative">
+                    <div class="absolute top-2 right-2 text-[10px] text-gray-600">PIKANOMWAAN SYSTEM v4.0</div>
+                    <div id="aiTerminalContent"></div>
+                </div>
+                <div id="skillsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+            `;
+
+            const grid = document.getElementById('skillsGrid');
+            const skills = portfolioData.skills;
+
+            skills.forEach((data, index) => {
+                const card = document.createElement('div');
+                card.className = 'bg-surface border border-white/5 p-8 hover:border-primary/50 transition-all duration-300 group';
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-6">
+                        <i data-lucide="code-2" class="text-primary w-8 h-8"></i>
+                        <span class="font-display text-2xl opacity-20 group-hover:opacity-100 transition-opacity">${data.level}%</span>
+                    </div>
+                    <h3 class="font-display text-2xl mb-2">${data.name}</h3>
+                    <p class="text-gray-500 text-sm mb-4">${data.category}</p>
+                    <div class="w-full bg-white/5 h-1">
+                        <div class="bg-primary h-full" style="width: 0%" id="bar-${index}"></div>
+                    </div>
+                `;
+                grid.appendChild(card);
+
+                setTimeout(() => {
+                    const bar = document.getElementById(`bar-${index}`);
+                    if (bar) {
+                        bar.style.width = `${data.level}%`;
+                        bar.style.transition = "width 1.5s ease-out";
+                    }
+                }, 100);
+            });
+
+            // AI Logic
+            const btn = document.getElementById('aiDiagnosticBtn');
+            const terminal = document.getElementById('aiTerminal');
+            const content = document.getElementById('aiTerminalContent');
+
+            btn.onclick = async () => {
+                if (!apiKey) {
+                    alert("Please add your Gemini API Key in the code (line ~130)");
+                    return;
+                }
+                terminal.classList.remove('hidden');
+                content.innerHTML = `<span class="animate-pulse">SCANNING CORE SYSTEMS...</span>`;
+
+                const skillsString = skills.map(s => s.name).join(', ');
+                const prompt = `You are PIKANOMWAAN, a futuristic AI portfolio system. Analyze this developer's stack: [${skillsString}]. Give a short, high-tech status report (max 3 sentences). Be professional but sound like a sci-fi interface. Use technical jargon.`;
+
+                try {
+                    const response = await callGemini(prompt);
+                    animateText(content, "> " + response);
+                } catch (e) {
+                    content.innerHTML = "> CONNECTION ERROR: " + e.message;
+                }
+            };
+        }
+
+        function renderProjects(container) {
+            container.innerHTML = `
+                <div class="flex justify-between items-end mb-16">
+                    <h2 class="font-display text-6xl uppercase">Selected Works</h2>
+                    <div class="hidden md:block text-right text-gray-500 font-body text-sm">SCROLL TO EXPLORE<br>DRAG TO NAVIGATE</div>
+                </div>
+                <div id="projectsList" class="space-y-24"></div>
+            `;
+
+            const list = document.getElementById('projectsList');
+            const projects = portfolioData.projects;
+
+            projects.forEach((data, index) => {
+                const item = document.createElement('div');
+                const isEven = (index + 1) % 2 === 0;
+                item.className = `project-card group flex flex-col md:flex-row ${isEven ? 'md:flex-row-reverse' : ''} gap-12 items-center`;
+                item.innerHTML = `
+                    <div class="w-full md:w-1/2 overflow-hidden border border-white/10 relative aspect-video cursor-pointer">
+                        ${data.image ? `
+                            <img src="${data.image}" alt="${data.title}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+                        ` : `
+                            <div class="absolute inset-0 bg-surfaceHighlight flex items-center justify-center group-hover:scale-105 transition-transform duration-700">
+                                <span class="font-display text-6xl text-white/5">${data.title.substring(0, 2)}</span>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+                        `}
+                        <div class="absolute bottom-4 left-4">
+                            <span class="bg-primary text-black text-xs font-bold px-2 py-1 uppercase">${data.tech}</span>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 ${isEven ? 'md:text-right' : 'md:text-left'}">
+                        <h3 class="text-primary font-body text-sm tracking-widest mb-2">0${index + 1} / PROJECT</h3>
+                        <h2 class="text-4xl md:text-5xl font-display uppercase mb-6 group-hover:text-primary transition-colors cursor-pointer">${data.title}</h2>
+                        <p class="text-gray-400 text-lg mb-8 leading-relaxed max-w-md ${isEven ? 'ml-auto' : ''}">${data.description}</p>
+                        <button class="text-white border-b border-white/20 pb-1 hover:border-primary hover:text-primary transition-all uppercase tracking-widest text-sm">View Case Study</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+
+            gsap.utils.toArray('.project-card').forEach(card => {
+                gsap.from(card, {
+                    scrollTrigger: { trigger: card, start: "top 80%", toggleActions: "play none none reverse" },
+                    y: 100, opacity: 0, duration: 1, ease: "power3.out"
+                });
+            });
+
+            // Force refresh to ensure positions are correct
+            setTimeout(() => ScrollTrigger.refresh(), 100);
+        }
+
+        function renderCertificates(container) {
+            container.innerHTML = `
+                <div class="flex justify-between items-end mb-16">
+                    <h2 class="font-display text-6xl uppercase">Certifications</h2>
+                    <div class="hidden md:block text-right text-gray-500 font-body text-sm">PROFESSIONAL ACHIEVEMENTS</div>
+                </div>
+                <div id="certificatesList" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+            `;
+
+            const list = document.getElementById('certificatesList');
+            const certificates = portfolioData.certificates || [];
+
+            if (certificates.length === 0) {
+                list.innerHTML = '<p class="text-gray-500 col-span-2 text-center py-12">No certificates added yet</p>';
+                return;
+            }
+
+            certificates.forEach((data, index) => {
+                const item = document.createElement('div');
+                item.className = 'certificate-card group bg-surface border border-white/10 hover:border-primary/50 transition-all duration-300 overflow-hidden cursor-pointer';
+                item.onclick = () => openCertificateDetailModal(index);
+                item.innerHTML = `
+                    ${data.image ? `
+                        <div class="w-full h-48 overflow-hidden relative">
+                            <img src="${data.image}" alt="${data.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent"></div>
+                        </div>
+                    ` : ''}
+                    <div class="p-8">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="bg-primary/10 p-3 border border-primary/20">
+                                <i data-lucide="award" class="text-primary w-8 h-8"></i>
+                            </div>
+                            <span class="text-xs text-gray-500 uppercase tracking-widest">${data.date}</span>
+                        </div>
+                        <h3 class="text-2xl font-display uppercase mb-2 group-hover:text-primary transition-colors">${data.title}</h3>
+                        <p class="text-primary text-sm mb-4 font-semibold">${data.issuer}</p>
+                        <p class="text-gray-400 leading-relaxed">${data.description}</p>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+
+            lucide.createIcons();
+            gsap.utils.toArray('.certificate-card').forEach((card, index) => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 85%", // Slightly earlier trigger
+                        toggleActions: "play none none reverse"
+                    },
+                    y: 50, opacity: 0, duration: 0.8, delay: index * 0.1, ease: "power3.out"
+                });
+            });
+
+            // Force refresh to ensure positions are correct after DOM update
+            setTimeout(() => ScrollTrigger.refresh(), 100);
+        }
+
+        function renderContact(container) {
+            container.innerHTML = `
+                <div id="canvas-container"></div>
+                <div class="min-h-[60vh] flex flex-col justify-center items-center text-center relative z-10">
+                    <h2 class="font-display text-[8vw] leading-none uppercase mb-8 text-primary transition-colors cursor-default">Let's Talk</h2>
+                    <p class="font-body text-xl text-gray-400 max-w-xl mb-12">Have a project in mind? Looking for a developer who understands design?</p>
+                    <a href="mailto:pikanomwaan.code@gmail.com" class="inline-block border border-white/20 px-12 py-6 text-2xl font-display uppercase tracking-widest hover:bg-primary hover:text-black hover:scale-105 transition-all duration-300">pikanomwaan.code@gmail.com</a>
+                    <div class="mt-24 flex space-x-8">
+                        <a href="https://www.instagram.com/k._.kttp.q" target="_blank" class="text-gray-500 hover:text-primary transition-colors">INSTAGRAM</a>
+                        <a href="https://www.tiktok.com/@k._.kttp.q" target="_blank" class="text-gray-500 hover:text-primary transition-colors">TIKTOK</a>
+                        <a href="https://x.com/Ph4tZ4" target="_blank" class="text-gray-500 hover:text-primary transition-colors">X</a>
+                        <a href="https://github.com/Ph4tZ4" target="_blank" class="text-gray-500 hover:text-primary transition-colors">GITHUB</a>
+                    </div>
+                </div>
+            `;
+
+            // Initialize 3D Background
+            setTimeout(() => {
+                init3DBackground();
+            }, 100);
+            gsap.from("h2", { y: 100, opacity: 0, duration: 1, ease: "back.out(1.7)" });
+        }
+
+        // --- UTILS & CURSOR ---
+        async function callGemini(prompt) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = { contents: [{ parts: [{ text: prompt }] }] };
+            const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+            const data = await response.json();
+            if (data.candidates) return data.candidates[0].content.parts[0].text;
+            throw new Error("AI No Response");
+        }
+
+        function animateText(element, text, speed = 20) {
+            element.innerHTML = ""; element.classList.add('typing-cursor');
+            let i = 0;
+            function type() {
+                if (i < text.length) { element.innerHTML += text.charAt(i); i++; setTimeout(type, speed); }
+                else { element.classList.remove('typing-cursor'); }
+            }
+            type();
+        }
+
+        const cursorDot = document.getElementById("cursor-dot");
+        const cursorOutline = document.getElementById("cursor-outline");
+        window.addEventListener("mousemove", (e) => {
+            cursorDot.style.left = `${e.clientX}px`; cursorDot.style.top = `${e.clientY}px`;
+            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
+        });
+        document.body.addEventListener('mouseover', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || e.target.closest('.cursor-pointer')) {
+                cursorOutline.style.width = '60px'; cursorOutline.style.height = '60px'; cursorOutline.style.backgroundColor = 'rgba(234, 179, 8, 0.1)';
+            } else {
+                cursorOutline.style.width = '40px'; cursorOutline.style.height = '40px'; cursorOutline.style.backgroundColor = 'transparent';
+            }
+        });
+
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.style.opacity = menu.style.opacity === '1' ? '0' : '1';
+            menu.style.pointerEvents = menu.style.opacity === '1' ? 'auto' : 'none';
+        }
+
+        // Load Data
+        window.onload = async () => {
+            // Initialize Firebase
+            DataManager.initialize();
+
+            // Show loading state (optional, or rely on preloader)
+            try {
+                const data = await DataManager.fetchData();
+
+                // Update Profile
+                if (data.profile) {
+                    document.getElementById('profileName').textContent = data.profile.name;
+                    document.getElementById('profileRole').textContent = data.profile.role;
+                    document.getElementById('profileBio').textContent = data.profile.bio;
+                    document.getElementById('profileEmail').textContent = data.profile.email;
+                    document.getElementById('profileGithub').href = data.profile.github;
+                    document.getElementById('profileLinkedin').href = data.profile.linkedin;
+
+                    if (data.profile.image) {
+                        document.getElementById('profileImage').src = data.profile.image;
+                    }
+                }
+
+                // Render Sections
+                renderSkills(data.skills);
+                renderProjects(data.projects);
+                renderCertificates(data.certificates);
+
+                // Initialize Lucide Icons
+                lucide.createIcons();
+
+            } catch (error) {
+                console.error('Failed to load data:', error);
+            }
+        };
+
+        // Certificate Detail Modal Functions
+        function openCertificateDetailModal(index) {
+            const certificates = portfolioData.certificates || [];
+            const data = certificates[index];
+            if (!data) return;
+
+            // Populate Modal Data
+            document.getElementById('modalCertImage').src = data.image || '';
+            document.getElementById('modalCertTitle').textContent = data.title;
+            document.getElementById('modalCertIssuer').textContent = data.issuer;
+            document.getElementById('modalCertDate').textContent = data.date;
+            document.getElementById('modalCertDescription').textContent = data.description;
+
+            // Show Modal
+            const modal = document.getElementById('certificateDetailModal');
+            modal.classList.remove('hidden', 'pointer-events-none');
+            // Small delay to allow display:block to apply before opacity transition
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
+
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeCertificateDetailModal() {
+            const modal = document.getElementById('certificateDetailModal');
+            modal.classList.add('opacity-0');
+
+            setTimeout(() => {
+                modal.classList.add('hidden', 'pointer-events-none');
+                document.body.style.overflow = ''; // Restore scrolling
+            }, 300); // Match transition duration
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeCertificateDetailModal();
+            }
+        });
+    </script>
+    <!-- Certificate Detail Modal -->
+    <div id="certificateDetailModal"
+        class="fixed inset-0 z-[100] hidden opacity-0 pointer-events-none transition-opacity duration-300">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" onclick="closeCertificateDetailModal()"></div>
+
+        <!-- Content -->
+        <div
+            class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl px-4 md:px-8">
+            <div class="bg-surface border border-white/10 flex flex-col md:flex-row overflow-hidden max-h-[90vh]">
+                <!-- Image Container -->
+                <div class="w-full md:w-1/2 bg-black/50 relative group flex items-center justify-center bg-zinc-900">
+                    <img id="modalCertImage" src="" alt="Certificate"
+                        class="w-full h-full object-contain max-h-[50vh] md:max-h-[80vh]">
+                </div>
+
+                <!-- Details Container -->
+                <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-surface relative">
+                    <button onclick="closeCertificateDetailModal()"
+                        class="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors z-10">
+                        <i data-lucide="x" class="w-8 h-8"></i>
+                    </button>
+
+                    <div class="mb-6">
+                        <span id="modalCertDate"
+                            class="text-primary text-sm font-bold tracking-widest uppercase mb-2 block"></span>
+                        <h2 id="modalCertTitle"
+                            class="text-3xl md:text-4xl font-display uppercase text-white mb-2 leading-tight"></h2>
+                        <p id="modalCertIssuer" class="text-gray-400 text-lg"></p>
+                    </div>
+
+                    <div class="w-12 h-1 bg-primary mb-8"></div>
+
+                    <div class="overflow-y-auto max-h-[30vh] pr-4 custom-scrollbar">
+                        <p id="modalCertDescription" class="text-gray-300 leading-relaxed text-lg"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

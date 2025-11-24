@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIKANOMWAAN.ADMIN - Login</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <!-- Styles -->
+    <link rel="stylesheet" href="admin-styles.css">
+
+    <!-- Security Check -->
+    <script>
+        if (!sessionStorage.getItem('admin_secret_access')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-logo">
+                <span style="color: #EAB308;">PIKANOMWAAN</span><span>.ADMIN</span>
+            </div>
+            <p class="login-subtitle">Control Panel Access</p>
+
+            <div id="alertContainer"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="Enter admin password"
+                        autocomplete="current-password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    Access Dashboard
+                </button>
+            </form>
+
+            <p style="margin-top: 2rem; text-align: center; color: #6b7280; font-size: 0.75rem;">
+                Default password: <code
+                    style="background: #1E1E1E; padding: 0.25rem 0.5rem; border-radius: 3px;">admin123</code>
+            </p>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+    <script src="data-manager.js"></script>
+    <script>
+        // Check if already logged in
+        if (DataManager.isSessionValid()) {
+            window.location.href = 'dashboard.html';
+        }
+
+        const loginForm = document.getElementById('loginForm');
+        const passwordInput = document.getElementById('password');
+        const alertContainer = document.getElementById('alertContainer');
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const password = passwordInput.value;
+
+            if (DataManager.verifyPassword(password)) {
+                DataManager.createSession();
+                showAlert('Login successful! Redirecting...', 'success');
+
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            } else {
+                showAlert('Invalid password. Please try again.', 'error');
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        });
+
+        function showAlert(message, type) {
+            alertContainer.innerHTML = `
+                <div class="alert alert-${type}">
+                    ${message}
+                </div>
+            `;
+
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 3000);
+        }
+
+        // Focus password input on load
+        passwordInput.focus();
+    </script>
+</body>
+
+</html>
