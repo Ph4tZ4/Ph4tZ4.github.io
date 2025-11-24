@@ -913,6 +913,9 @@
 
             } catch (error) {
                 console.error('Failed to load data:', error);
+            } finally {
+                // Initial Route
+                router('home');
             }
         };
 
