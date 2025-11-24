@@ -554,6 +554,15 @@
                     <input type="text" id="projectTitle" class="form-input" placeholder="e.g., Awesome App" required>
                 </div>
                 <div class="form-group">
+                    <label class="form-label">Repository Link (GitHub)</label>
+                    <input type="url" id="projectRepoLink" class="form-input"
+                        placeholder="https://github.com/username/repo">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Demo Link (Live Website)</label>
+                    <input type="url" id="projectDemoLink" class="form-input" placeholder="https://example.com">
+                </div>
+                <div class="form-group">
                     <label class="form-label" for="projectTech">Tech Stack</label>
                     <input type="text" id="projectTech" class="form-input" placeholder="e.g., React / Node.js" required>
                 </div>
@@ -1437,37 +1446,39 @@
             lucide.createIcons();
         }
 
-        function openProjectModal(index = null) {
+        async function openProjectModal(index = null) {
             editingProjectIndex = index;
             const modal = document.getElementById('projectModal');
             const title = document.getElementById('projectModalTitle');
 
             if (index !== null) {
-                const data = DataManager.loadData();
+                const data = await DataManager.fetchData();
                 const project = data.projects[index];
                 title.textContent = 'Edit Project';
                 document.getElementById('projectTitle').value = project.title;
                 document.getElementById('projectTech').value = project.tech;
+
+                // Populate Links (Migration: Use old 'link' as 'repoLink' if needed)
+                document.getElementById('projectRepoLink').value = project.repoLink || project.link || '';
+                document.getElementById('projectDemoLink').value = project.demoLink || '';
+
                 document.getElementById('projectDescription').value = project.description;
 
-                // Handle Image (URL or Base64)
-                const image = project.image || '';
-                if (image.startsWith('data:image')) {
-                    document.getElementById('projectImageBase64').value = image;
-                    document.getElementById('projectImage').value = ''; // Clear URL input
-                    const preview = document.getElementById('projectImagePreview');
-                    preview.classList.remove('hidden');
-                    preview.querySelector('img').src = image;
+                // Show existing image preview
+                const preview = document.getElementById('projectImagePreview');
+                if (project.image) {
+                    preview.innerHTML = `<img src="${project.image}" style="width: 100%; height: 100%; object-fit: cover;">`;
+                    document.getElementById('projectImageBase64').value = project.image;
                 } else {
-                    document.getElementById('projectImage').value = image;
-                    document.getElementById('projectImageBase64').value = '';
-                    document.getElementById('projectImagePreview').classList.add('hidden');
+                    preview.innerHTML = `<div style="text-align: center; color: #6b7280;"><i data-lucide="image" style="width: 32px; height: 32px; margin-bottom: 0.5rem;"></i><br>No image selected</div>`;
+                    lucide.createIcons();
                 }
             } else {
                 title.textContent = 'Add Project';
                 document.getElementById('projectForm').reset();
+                document.getElementById('projectImagePreview').innerHTML = `<div style="text-align: center; color: #6b7280;"><i data-lucide="image" style="width: 32px; height: 32px; margin-bottom: 0.5rem;"></i><br>No image selected</div>`;
                 document.getElementById('projectImageBase64').value = '';
-                document.getElementById('projectImagePreview').classList.add('hidden');
+                lucide.createIcons();
             }
 
             modal.classList.add('active');
@@ -1522,7 +1533,8 @@
                     title: document.getElementById('projectTitle').value,
                     tech: document.getElementById('projectTech').value,
                     description: document.getElementById('projectDescription').value,
-                    link: document.getElementById('projectLink').value,
+                    repoLink: document.getElementById('projectRepoLink').value,
+                    demoLink: document.getElementById('projectDemoLink').value,
                     image: imageUrl
                 };
 

@@ -741,7 +741,18 @@
                         <h3 class="text-primary font-body text-sm tracking-widest mb-2">0${index + 1} / PROJECT</h3>
                         <h2 class="text-4xl md:text-5xl font-display uppercase mb-6 group-hover:text-primary transition-colors cursor-pointer">${data.title}</h2>
                         <p class="text-gray-400 text-lg mb-8 leading-relaxed max-w-md ${isEven ? 'ml-auto' : ''}">${data.description}</p>
-                        <button class="text-white border-b border-white/20 pb-1 hover:border-primary hover:text-primary transition-all uppercase tracking-widest text-sm">View Case Study</button>
+                        <div class="flex gap-6 ${isEven ? 'justify-end' : 'justify-start'}">
+                            ${(data.repoLink || data.link) ? `
+                                <a href="${data.repoLink || data.link}" target="_blank" class="text-white border-b border-white/20 pb-1 hover:border-primary hover:text-primary transition-all uppercase tracking-widest text-sm flex items-center gap-2">
+                                    <i data-lucide="github" class="w-4 h-4"></i> Visit Repo
+                                </a>
+                            ` : ''}
+                            ${data.demoLink ? `
+                                <a href="${data.demoLink}" target="_blank" class="text-white border-b border-white/20 pb-1 hover:border-primary hover:text-primary transition-all uppercase tracking-widest text-sm flex items-center gap-2">
+                                    <i data-lucide="external-link" class="w-4 h-4"></i> Visit Demo
+                                </a>
+                            ` : ''}
+                        </div>
                     </div>
                 `;
                 list.appendChild(item);
