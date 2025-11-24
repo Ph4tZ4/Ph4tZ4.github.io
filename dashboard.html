@@ -40,6 +40,10 @@
             <span style="color: #EAB308;">PIKANOMWAAN</span><span>.ADMIN</span>
         </div>
         <div class="header-actions">
+            <button class="btn btn-primary" onclick="saveAllData()" title="Save all data to LocalStorage and Cloud">
+                <i data-lucide="save" style="width: 16px; height: 16px;"></i>
+                Save All
+            </button>
             <button class="btn btn-secondary" onclick="syncToCloud()" title="Push Local Data to Cloud">
                 <i data-lucide="cloud-upload" style="width: 16px; height: 16px;"></i>
                 Sync to Cloud
@@ -1824,6 +1828,40 @@
             } catch (error) {
                 console.error(error);
                 showAlert('Error syncing: ' + error.message, 'error');
+            } finally {
+                toggleLoader(false);
+            }
+        }
+
+        // Save All Data Function
+        async function saveAllData() {
+            if (!confirm('This will save all current data and sync to cloud. Continue?')) return;
+
+            toggleLoader(true, 'Saving All Data...');
+            try {
+                // Get current data
+                const data = DataManager.loadData();
+
+                // Force save to LocalStorage (ensures imported data is persisted)
+                DataManager.saveDataLocally(data);
+
+                // Sync to Cloud
+                toggleLoader(true, 'Syncing to Cloud...');
+                const result = await DataManager.pushData(data);
+
+                if (result.success) {
+                    showAlert('All data saved and synced successfully!', 'success');
+                    // Reload tables to reflect any changes
+                    await loadOverviewStats();
+                    await loadSkillsTable();
+                    await loadProjectsTable();
+                    await loadCertificatesTable();
+                } else {
+                    showAlert('Saved locally, but sync failed: ' + result.message, 'warning');
+                }
+            } catch (error) {
+                console.error(error);
+                showAlert('Error saving: ' + error.message, 'error');
             } finally {
                 toggleLoader(false);
             }
