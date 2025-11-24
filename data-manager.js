@@ -180,13 +180,22 @@ const DataManager = {
 
     // --- FIREBASE OPERATIONS ---
 
+    // Helper: Timeout Promise
+    timeout(ms) {
+        return new Promise((_, reject) => setTimeout(() => reject(new Error('Request timed out')), ms));
+    },
+
     // Fetch Data from Firestore
     async fetchData() {
         if (!this.db) return this.loadData(); // Fallback to LocalStorage
 
         try {
+            // Race between Firestore get() and 5s timeout
             const docRef = this.db.collection('portfolio').doc('main');
-            const doc = await docRef.get();
+            const doc = await Promise.race([
+                docRef.get(),
+                this.timeout(5000)
+            ]);
 
             if (doc.exists) {
                 const data = doc.data();
@@ -199,6 +208,7 @@ const DataManager = {
             }
         } catch (error) {
             console.error('Error fetching cloud data:', error);
+            // Fallback to local data on error/timeout
             return this.loadData();
         }
     },
@@ -208,8 +218,11 @@ const DataManager = {
         if (!this.db) return { success: false, message: 'Firebase not initialized' };
 
         try {
-            // Save to Cloud
-            await this.db.collection('portfolio').doc('main').set(data);
+            // Save to Cloud with timeout
+            await Promise.race([
+                this.db.collection('portfolio').doc('main').set(data),
+                this.timeout(5000)
+            ]);
 
             // Save to Local Cache
             this.saveDataLocally(data);
@@ -217,7 +230,11 @@ const DataManager = {
             return { success: true, message: 'Data saved to cloud successfully' };
         } catch (error) {
             console.error('Error pushing data to cloud:', error);
-            return { success: false, message: 'Failed to save to cloud: ' + error.message };
+
+            // Even if cloud fails, save locally so user doesn't lose work
+            this.saveDataLocally(data);
+
+            return { success: false, message: 'Saved locally, but Cloud sync failed: ' + error.message };
         }
     },
 
