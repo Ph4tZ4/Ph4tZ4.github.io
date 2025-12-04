@@ -1001,32 +1001,35 @@
         <!-- Content -->
         <div
             class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl px-4 md:px-8">
-            <div class="bg-surface border border-white/10 flex flex-col md:flex-row overflow-hidden max-h-[90vh]">
+            <div
+                class="bg-surface border border-white/10 flex flex-col md:flex-row overflow-hidden max-h-[85vh] md:max-h-[90vh] w-full">
                 <!-- Image Container -->
-                <div class="w-full md:w-1/2 bg-black/50 relative group flex items-center justify-center bg-zinc-900">
-                    <img id="modalCertImage" src="" alt="Certificate"
-                        class="w-full h-full object-contain max-h-[50vh] md:max-h-[80vh]">
+                <div
+                    class="w-full md:w-1/2 bg-black/50 relative group flex items-center justify-center bg-zinc-900 h-56 md:h-auto shrink-0">
+                    <img id="modalCertImage" src="" alt="Certificate" class="w-full h-full object-contain p-4 md:p-0">
                 </div>
 
                 <!-- Details Container -->
-                <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-surface relative">
+                <div class="w-full md:w-1/2 bg-surface relative flex flex-col min-h-0 flex-1 md:flex-none">
                     <button onclick="closeCertificateDetailModal()"
-                        class="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors z-10">
+                        class="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors z-20 bg-surface/80 rounded-full p-1">
                         <i data-lucide="x" class="w-8 h-8"></i>
                     </button>
 
-                    <div class="mb-6">
-                        <span id="modalCertDate"
-                            class="text-primary text-sm font-bold tracking-widest uppercase mb-2 block"></span>
-                        <h2 id="modalCertTitle"
-                            class="text-3xl md:text-4xl font-display uppercase text-white mb-2 leading-tight"></h2>
-                        <p id="modalCertIssuer" class="text-gray-400 text-lg"></p>
-                    </div>
+                    <div class="p-6 md:p-12 overflow-y-auto custom-scrollbar h-full">
+                        <div class="mb-6 mt-8 md:mt-0">
+                            <span id="modalCertDate"
+                                class="text-primary text-sm font-bold tracking-widest uppercase mb-2 block"></span>
+                            <h2 id="modalCertTitle"
+                                class="text-2xl md:text-4xl font-display uppercase text-white mb-2 leading-tight"></h2>
+                            <p id="modalCertIssuer" class="text-gray-400 text-base md:text-lg"></p>
+                        </div>
 
-                    <div class="w-12 h-1 bg-primary mb-8"></div>
+                        <div class="w-12 h-1 bg-primary mb-6 shrink-0"></div>
 
-                    <div class="overflow-y-auto max-h-[30vh] pr-4 custom-scrollbar">
-                        <p id="modalCertDescription" class="text-gray-300 leading-relaxed text-lg"></p>
+                        <div class="text-gray-300 leading-relaxed text-base md:text-lg pb-8">
+                            <p id="modalCertDescription"></p>
+                        </div>
                     </div>
                 </div>
             </div>
