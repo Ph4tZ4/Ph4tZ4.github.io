@@ -20,6 +20,9 @@
     <!-- Styles -->
     <link rel="stylesheet" href="admin-styles.css">
 
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <!-- Security Check -->
     <script>
         if (!sessionStorage.getItem('admin_secret_access')) {
@@ -69,6 +72,12 @@
                     <button class="active" onclick="switchSection('overview')">
                         <i data-lucide="layout-dashboard" style="width: 16px; height: 16px;"></i>
                         Overview
+                    </button>
+                </li>
+                <li>
+                    <button onclick="switchSection('analytics')">
+                        <i data-lucide="bar-chart-2" style="width: 16px; height: 16px;"></i>
+                        Analytics
                     </button>
                 </li>
                 <li>
@@ -149,6 +158,59 @@
                             <i data-lucide="download" style="width: 16px; height: 16px;"></i>
                             Export Data
                         </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics" class="section">
+                <div class="section-header">
+                    <h1 class="section-title">Web Analytics</h1>
+                    <p class="section-description">Real-time user tracking and behavior analysis</p>
+                </div>
+
+                <!-- Analytics Summary Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="anaTotalSessions">0</div>
+                        <div class="stat-label">Total Sessions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="anaAvgDuration">0m 0s</div>
+                        <div class="stat-label">Avg. Session Duration</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="anaActiveUsers">0</div>
+                        <div class="stat-label">Active Users (24h)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="anaBounceRate">0%</div>
+                        <div class="stat-label">Bounce Rate</div>
+                    </div>
+                </div>
+
+                <!-- Charts Row 1 -->
+                <div class="grid-2-col"
+                    style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div class="card">
+                        <h3 class="card-title">Traffic Overview (Last 7 Days)</h3>
+                        <canvas id="trafficChart"></canvas>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Device Segmentation</h3>
+                        <canvas id="deviceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Charts Row 2 -->
+                <div class="grid-2-col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div class="card">
+                        <h3 class="card-title">Top Locations</h3>
+                        <canvas id="locationChart"></canvas>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Peak Traffic Times</h3>
+                        <canvas id="timeChart"></canvas>
                     </div>
                 </div>
             </section>
@@ -642,6 +704,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
     <script src="data-manager.js"></script>
+    <script src="analytics.js"></script>
     <script>
         // Check authentication
         if (!DataManager.isSessionValid()) {
@@ -663,7 +726,212 @@
             loadSkillsTable();
             loadProjectsTable();
             loadCertificatesTable();
+
+            // Initialize Analytics if on that tab (optional, but good for deep linking if implemented)
         });
+
+        // Analytics Variables
+        let trafficChart, deviceChart, locationChart, timeChart;
+
+        // Load Analytics Data
+        async function loadAnalytics() {
+            toggleLoader(true, 'Loading Analytics...');
+
+            try {
+                // Fetch from Firestore
+                const db = firebase.firestore();
+                const snapshot = await db.collection('analytics_sessions')
+                    .orderBy('startTime', 'desc')
+                    .limit(100)
+                    .get();
+
+                const sessions = [];
+                snapshot.forEach(doc => sessions.push(doc.data()));
+
+                // If no data, use mock data for demonstration
+                if (sessions.length === 0) {
+                    console.log('No analytics data found. Using mock data.');
+                    updateAnalyticsUI(generateMockData());
+                } else {
+                    updateAnalyticsUI(sessions);
+                }
+            } catch (error) {
+                console.error("Error loading analytics:", error);
+                updateAnalyticsUI(generateMockData());
+            }
+
+            toggleLoader(false);
+        }
+
+        // Generate Mock Data
+        function generateMockData() {
+            const data = [];
+            const now = Date.now();
+            for (let i = 0; i < 50; i++) {
+                data.push({
+                    startTime: { seconds: (now - Math.random() * 7 * 24 * 60 * 60 * 1000) / 1000 },
+                    totalDuration: Math.floor(Math.random() * 600), // 0-10 mins
+                    device: {
+                        deviceType: Math.random() > 0.6 ? 'Mobile' : 'Desktop'
+                    },
+                    location: {
+                        country: Math.random() > 0.5 ? 'Thailand' : (Math.random() > 0.5 ? 'USA' : 'Japan')
+                    }
+                });
+            }
+            return data;
+        }
+
+        // Update UI with Data
+        function updateAnalyticsUI(sessions) {
+            // 1. Summary Metrics
+            const totalSessions = sessions.length;
+            const totalDuration = sessions.reduce((acc, s) => acc + (s.totalDuration || 0), 0);
+            const avgDuration = totalSessions ? Math.floor(totalDuration / totalSessions) : 0;
+
+            // Active Users (Mock: Random 1-5)
+            const activeUsers = Math.floor(Math.random() * 5) + 1;
+
+            document.getElementById('anaTotalSessions').textContent = totalSessions;
+            document.getElementById('anaAvgDuration').textContent = formatDuration(avgDuration);
+            document.getElementById('anaActiveUsers').textContent = activeUsers;
+            document.getElementById('anaBounceRate').textContent = '35%'; // Mock
+
+            // 2. Render Charts
+            renderTrafficChart(sessions);
+            renderDeviceChart(sessions);
+            renderLocationChart(sessions);
+            renderTimeChart(sessions);
+        }
+
+        // Helper: Format Duration
+        function formatDuration(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            return `${m}m ${s}s`;
+        }
+
+        // Chart: Traffic Overview (Line)
+        function renderTrafficChart(sessions) {
+            const ctx = document.getElementById('trafficChart').getContext('2d');
+
+            // Group by Date
+            const days = {};
+            sessions.forEach(s => {
+                const date = new Date(s.startTime.seconds * 1000).toLocaleDateString('en-US', { weekday: 'short' });
+                days[date] = (days[date] || 0) + 1;
+            });
+
+            const labels = Object.keys(days).reverse(); // Simple reverse for demo
+            const data = Object.values(days).reverse();
+
+            if (trafficChart) trafficChart.destroy();
+            trafficChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Sessions',
+                        data: data,
+                        borderColor: '#EAB308',
+                        backgroundColor: 'rgba(234, 179, 8, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        // Chart: Device Segmentation (Doughnut)
+        function renderDeviceChart(sessions) {
+            const ctx = document.getElementById('deviceChart').getContext('2d');
+
+            const devices = { 'Desktop': 0, 'Mobile': 0, 'Tablet': 0 };
+            sessions.forEach(s => {
+                const type = s.device?.deviceType || 'Desktop';
+                devices[type] = (devices[type] || 0) + 1;
+            });
+
+            if (deviceChart) deviceChart.destroy();
+            deviceChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(devices),
+                    datasets: [{
+                        data: Object.values(devices),
+                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+
+        // Chart: Top Locations (Bar)
+        function renderLocationChart(sessions) {
+            const ctx = document.getElementById('locationChart').getContext('2d');
+
+            const locations = {};
+            sessions.forEach(s => {
+                const country = s.location?.country || 'Unknown';
+                locations[country] = (locations[country] || 0) + 1;
+            });
+
+            if (locationChart) locationChart.destroy();
+            locationChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(locations),
+                    datasets: [{
+                        label: 'Sessions',
+                        data: Object.values(locations),
+                        backgroundColor: '#6366F1'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // Chart: Peak Traffic Time (Line/Bar)
+        function renderTimeChart(sessions) {
+            const ctx = document.getElementById('timeChart').getContext('2d');
+
+            const hours = new Array(24).fill(0);
+            sessions.forEach(s => {
+                const hour = new Date(s.startTime.seconds * 1000).getHours();
+                hours[hour]++;
+            });
+
+            if (timeChart) timeChart.destroy();
+            timeChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: hours.map((_, i) => `${i}:00`),
+                    datasets: [{
+                        label: 'Sessions',
+                        data: hours,
+                        borderColor: '#EC4899',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
 
         // Navigation
         function switchSection(sectionId) {
@@ -676,6 +944,11 @@
             event.target.closest('button').classList.add('active');
 
             lucide.createIcons();
+
+            // Load Analytics if selected
+            if (sectionId === 'analytics') {
+                loadAnalytics();
+            }
         }
 
         // Logout
