@@ -208,8 +208,8 @@ const DataManager = {
         // Set default password if not exists (password: "admin123")
         const existingPassword = localStorage.getItem(this.KEYS.PASSWORD);
         if (!existingPassword) {
-            this.setPassword('admin123');
-            console.log('✓ Default password set: admin123');
+            this.setPassword('P@ssw0rd');
+            console.log('✓ Default password set: P@ssw0rd');
         }
     },
 
