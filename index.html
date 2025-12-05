@@ -216,6 +216,13 @@
     <div class="cursor-dot" id="cursor-dot"></div>
     <div class="cursor-outline" id="cursor-outline"></div>
 
+    <!-- Scroll To Top Button -->
+    <button id="scrollToTopBtn"
+        class="fixed bottom-8 right-8 z-50 p-3 bg-primary text-black rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-primary-hover hover:scale-110 translate-y-10"
+        onclick="scrollToTop()">
+        <i data-lucide="arrow-up" class="w-6 h-6"></i>
+    </button>
+
     <!-- Navigation -->
     <nav
         class="fixed top-0 left-0 w-full z-50 px-4 md:px-6 py-4 flex justify-between items-center bg-black/50 backdrop-blur-md text-white shadow-[0_10px_30px_rgba(0,0,0,0.9)] transition-all duration-300">
@@ -284,6 +291,24 @@
         window.onload = () => {
             router('home');
             lucide.createIcons();
+        }
+
+        // --- SCROLL TO TOP LOGIC ---
+        const scrollBtn = document.getElementById('scrollToTopBtn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollBtn.classList.remove('opacity-0', 'invisible', 'translate-y-10');
+            } else {
+                scrollBtn.classList.add('opacity-0', 'invisible', 'translate-y-10');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         }
 
         // Secret Admin Access (Click logo 5 times within 2 seconds)
