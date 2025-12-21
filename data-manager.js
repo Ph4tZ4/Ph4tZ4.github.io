@@ -24,8 +24,12 @@ const DataManager = {
     KEYS: {
         PASSWORD: 'vantage_admin_password',
         SESSION: 'vantage_admin_session',
-        DATA: 'vantage_portfolio_data' // Keep for backup/offline
+        DATA: 'vantage_portfolio_data', // Keep for backup/offline
+        VERSION: 'vantage_portfolio_version'
     },
+
+    // App Version - Change this to force local storage clear on client browsers
+    VERSION: '2.0',
 
     // Default Data Structure
     getDefaultData() {
@@ -197,6 +201,14 @@ const DataManager = {
 
     // Initialize Data Manager
     initialize() {
+        // Version Check & Cache Clearing
+        const currentVersion = localStorage.getItem(this.KEYS.VERSION);
+        if (currentVersion !== this.VERSION) {
+            console.log(`New version detected (${this.VERSION}). Clearing legacy data...`);
+            localStorage.removeItem(this.KEYS.DATA);
+            localStorage.setItem(this.KEYS.VERSION, this.VERSION);
+        }
+
         // Initialize Firebase
         if (typeof firebase !== 'undefined' && !this.app) {
             this.app = firebase.initializeApp(this.firebaseConfig);
