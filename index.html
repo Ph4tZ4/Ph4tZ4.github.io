@@ -270,8 +270,8 @@
     </main>
 
     <script>
-        // --- LOAD DATA FROM LOCALSTORAGE ---
-        const portfolioData = DataManager.loadData();
+        // --- LOAD DATA (local first, then Firebase) ---
+        let portfolioData = DataManager.loadData();
 
         // --- AI CONFIGURATION ---
         // ใส่ API Key ของคุณที่นี่เพื่อเปิดใช้งานฟีเจอร์ AI
@@ -288,10 +288,7 @@
         let threeCamera = null;
         let threeRenderer = null;
 
-        window.onload = () => {
-            router('home');
-            lucide.createIcons();
-        }
+        // window.onload is defined once below (after all render functions)
 
         // --- SCROLL TO TOP LOGIC ---
         const scrollBtn = document.getElementById('scrollToTopBtn');
@@ -944,35 +941,36 @@
             menu.style.pointerEvents = menu.style.opacity === '1' ? 'auto' : 'none';
         }
 
-        // Load Data
+        // Load Data — Single unified onload handler
         window.onload = async () => {
-            // Initialize Firebase
+            // Initialize Firebase (safe to call again, it checks if already init'd)
             DataManager.initialize();
 
-            // Show loading state (optional, or rely on preloader)
+            // 1. Render immediately with local/default data so the page isn't blank
+            router('home');
+            lucide.createIcons();
+
+            // 2. Fetch latest data from Firebase in the background
             try {
-                const data = await DataManager.fetchData();
+                const freshData = await DataManager.fetchData();
 
-                // Update Profile
-                if (data.profile) {
-                    // Check if elements exist before setting content (safeguard)
-                    const pName = document.getElementById('profileName');
-                    if (pName) pName.textContent = data.profile.name;
+                if (freshData && DataManager.validateData(freshData)) {
+                    // Check if the data actually changed (avoid unnecessary re-render)
+                    const oldJSON = JSON.stringify(portfolioData);
+                    const newJSON = JSON.stringify(freshData);
 
-                    // ... (other profile updates if elements exist)
+                    if (oldJSON !== newJSON) {
+                        console.log('✓ Fresh data from Firebase loaded — updating UI');
+                        portfolioData = freshData;
+
+                        // Re-render the current page with the new data
+                        renderPage(currentPage);
+                    } else {
+                        console.log('✓ Firebase data matches local cache — no update needed');
+                    }
                 }
-
-                // Note: Sections are rendered by the router, so we don't call renderSkills etc. here directly.
-                // The router('home') below will start the app.
-
-                // Initialize Lucide Icons
-                lucide.createIcons();
-
             } catch (error) {
-                console.error('Failed to load data:', error);
-            } finally {
-                // Initial Route
-                router('home');
+                console.error('Failed to load Firebase data (using local/default):', error);
             }
         };
 
