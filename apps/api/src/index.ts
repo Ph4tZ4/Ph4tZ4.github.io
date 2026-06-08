@@ -10,7 +10,14 @@ async function main(): Promise<void> {
 
   const app = express();
 
-  app.use(cors({ origin: env.corsOrigin, credentials: true }));
+  const allowedOrigins = env.corsOrigin.split(',').map((o) => o.trim());
+  app.use(cors({
+    origin: (origin, cb) => {
+      if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+      return cb(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+  }));
   app.use(express.json({ limit: '2mb' }));
 
   app.get('/api/health', (_req, res) => {
