@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { Dashboard } from './admin/Dashboard';
 import './admin.css';
@@ -35,15 +35,26 @@ function LoginForm({ onLogin }: { onLogin: (password: string) => Promise<void> }
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [slowRequest, setSlowRequest] = useState(false);
+
+  useEffect(() => {
+    if (!busy) {
+      setSlowRequest(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setSlowRequest(true), 5000);
+    return () => window.clearTimeout(timer);
+  }, [busy]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError('');
     setBusy(true);
+    setSlowRequest(false);
     try {
       await onLogin(password);
     } catch (err) {
-      setError((err as Error).message || 'Invalid password. Please try again.');
+      setError((err as Error).name === 'AbortError' ? 'Server took too long to respond. Please try again.' : (err as Error).message || 'Invalid password. Please try again.');
       setPassword('');
     } finally {
       setBusy(false);
@@ -79,8 +90,13 @@ function LoginForm({ onLogin }: { onLogin: (password: string) => Promise<void> }
             />
           </div>
           <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={busy}>
-            {busy ? 'Accessing...' : 'Access Dashboard'}
+            {busy ? (slowRequest ? 'Waking server...' : 'Accessing...') : 'Access Dashboard'}
           </button>
+          {slowRequest && (
+            <p style={{ color: '#9ca3af', fontSize: '0.75rem', textAlign: 'center', marginTop: '0.75rem' }}>
+              Free hosting may take a moment to wake up.
+            </p>
+          )}
         </form>
       </div>
     </div>

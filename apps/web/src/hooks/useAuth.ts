@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from 'react';
 const TOKEN_KEY = 'portfolio_admin_token';
 const USER_KEY = 'portfolio_admin_user';
 const BASE = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '');
+const REQUEST_TIMEOUT_MS = 60000;
 
 interface AuthUser {
   id: string;
@@ -32,6 +33,16 @@ function url(path: string): string {
   return `${BASE}${path}`;
 }
 
+async function fetchWithTimeout(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  try {
+    return await fetch(input, { ...init, signal: controller.signal });
+  } finally {
+    window.clearTimeout(timeout);
+  }
+}
+
 export function useAuth() {
   const [state, setState] = useState<AuthState>({
     user: getStoredUser(),
@@ -45,7 +56,7 @@ export function useAuth() {
       return;
     }
     // Validate token with backend on mount
-    fetch(url('/api/auth/me'), { headers: { Authorization: `Bearer ${token}` } })
+    fetchWithTimeout(url('/api/auth/me'), { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => {
         if (!res.ok) throw new Error('Invalid token');
         return res.json();
@@ -62,7 +73,7 @@ export function useAuth() {
   }, []);
 
   const login = useCallback(async (username: string, password: string) => {
-    const res = await fetch(url('/api/auth/login'), {
+    const res = await fetchWithTimeout(url('/api/auth/login'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
