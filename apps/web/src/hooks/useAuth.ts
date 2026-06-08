@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 
 const TOKEN_KEY = 'portfolio_admin_token';
 const USER_KEY = 'portfolio_admin_user';
+const BASE = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '');
 
 interface AuthUser {
   id: string;
@@ -27,6 +28,10 @@ function getStoredUser(): AuthUser | null {
   }
 }
 
+function url(path: string): string {
+  return `${BASE}${path}`;
+}
+
 export function useAuth() {
   const [state, setState] = useState<AuthState>({
     user: getStoredUser(),
@@ -40,7 +45,7 @@ export function useAuth() {
       return;
     }
     // Validate token with backend on mount
-    fetch('/api/auth/me', { headers: { Authorization: `Bearer ${token}` } })
+    fetch(url('/api/auth/me'), { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => {
         if (!res.ok) throw new Error('Invalid token');
         return res.json();
@@ -57,7 +62,7 @@ export function useAuth() {
   }, []);
 
   const login = useCallback(async (username: string, password: string) => {
-    const res = await fetch('/api/auth/login', {
+    const res = await fetch(url('/api/auth/login'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),

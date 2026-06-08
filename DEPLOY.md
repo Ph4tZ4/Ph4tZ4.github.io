@@ -128,6 +128,48 @@ VITE_API_BASE_URL=https://your-render-url.onrender.com
 
 ---
 
+## Troubleshooting — Vercel Opens but Data/Login Does Not Work
+
+If the browser console shows `404` for `/api/auth/login`, `/api/auth/me`, or `/api/portfolio`, check this first:
+
+### 1. Set Vercel API URL
+
+In Vercel → Project → **Settings** → **Environment Variables**, add:
+
+```
+VITE_API_BASE_URL=https://ph4tz4-server.onrender.com
+```
+
+Then redeploy the frontend:
+
+1. Go to **Deployments**
+2. Click the latest deployment menu
+3. Click **Redeploy**
+
+### 2. Set Render CORS Origin
+
+In Render → Web Service → **Environment**, make sure `CORS_ORIGIN` includes your real Vercel URL:
+
+```
+CORS_ORIGIN=https://ph4tz4.vercel.app,http://localhost:5173
+```
+
+Then restart/redeploy the Render service.
+
+### 3. Seed Production Database
+
+If API works but the portfolio is empty, seed the production MongoDB once:
+
+```bash
+cd apps/api && npm run seed
+```
+
+Make sure your local `apps/api/.env` points to the same Atlas database used by Render before running seed.
+
+Alternatively, log in to `/admin`, add/edit data, and click save. The backend will create the portfolio document automatically.
+
+---
+
 ## Local Development (after deploy)
 
 For local dev, create `apps/web/.env.local`:

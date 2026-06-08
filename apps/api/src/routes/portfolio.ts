@@ -7,6 +7,24 @@ export const portfolioRouter = Router();
 
 const PORTFOLIO_KEY = 'main';
 
+const emptyPortfolio = {
+  about: {
+    years: '',
+    location: '',
+    status: '',
+    description: '',
+    detail: '',
+    philosophy: '',
+    interests: [],
+    education: [],
+    experience: [],
+    expertise: [],
+  },
+  skills: [],
+  projects: [],
+  certificates: [],
+};
+
 const educationSchema = z.object({
   degree: z.string().default(''),
   institution: z.string().default(''),
@@ -74,7 +92,7 @@ const portfolioSchema = z.object({
 portfolioRouter.get('/', async (_req: Request, res: Response) => {
   const doc = await Portfolio.findOne({ key: PORTFOLIO_KEY }).lean();
   if (!doc) {
-    res.json({ about: {}, skills: [], projects: [], certificates: [] });
+    res.json(emptyPortfolio);
     return;
   }
   const { _id, key, __v, createdAt, updatedAt, ...data } = doc as Record<string, unknown>;
