@@ -17,9 +17,9 @@ export function About({ data }: { data: AboutType }) {
 
   return (
     <div ref={root}>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mt-8 md:mt-12">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(260px,0.8fr)_minmax(0,1.2fr)] xl:grid-cols-[minmax(280px,0.75fr)_minmax(0,1.25fr)] gap-12 lg:gap-14 mt-8 md:mt-12">
         <center className="order-first lg:order-none">
-          <div className="relative w-full max-w-[400px] lg:max-w-[500px]">
+          <div className="relative w-full max-w-[360px] lg:max-w-[380px] xl:max-w-[420px]">
             <div className="w-full aspect-[5/6] bg-surfaceHighlight border border-white/5 relative overflow-hidden group about-image-container">
               <img src="/images/Avata.JPG" alt="Profile" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-60" />
@@ -35,7 +35,7 @@ export function About({ data }: { data: AboutType }) {
           <h2 className="font-display text-4xl md:text-6xl mb-6 md:mb-8 uppercase text-center lg:text-left">Who I Am</h2>
 
           <div
-            className="about-scroll-container max-h-[400px] md:max-h-[500px] overflow-y-auto pr-2 md:pr-4"
+            className="about-scroll-container max-h-[420px] md:max-h-[560px] overflow-y-auto pr-2 md:pr-4"
             style={{ scrollbarWidth: 'thin', scrollbarColor: '#EAB308 #1E1E1E' }}
           >
             <div className="mb-8">

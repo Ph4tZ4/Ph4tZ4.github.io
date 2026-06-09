@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ThreeBackground } from '../../components/ThreeBackground';
 import type { PageId } from '../../types';
@@ -6,10 +6,56 @@ import type { PageId } from '../../types';
 export function Home({ navigate }: { navigate: (page: PageId) => void }) {
   const root = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from('.reveal-text', { y: 200, skewY: 10, duration: 1.2, stagger: 0.1, ease: 'power4.out' });
-      gsap.to('.fade-in-up', { opacity: 1, y: 0, duration: 1, delay: 0.5, stagger: 0.2 });
+      const revealText = gsap.utils.toArray<HTMLElement>('.reveal-text');
+      const fadeInUp = gsap.utils.toArray<HTMLElement>('.fade-in-up');
+
+      gsap.set(revealText, { yPercent: 115 });
+      gsap.set(fadeInUp, { opacity: 0, y: 24 });
+
+      gsap
+        .timeline()
+        .to(revealText, {
+          yPercent: 0,
+          duration: 1.2,
+          stagger: 0.1,
+          ease: 'power4.out',
+        })
+        .fromTo(
+          '.developer-float .reveal-text',
+          { skewY: 10 },
+          {
+            skewY: 0,
+            duration: 1.2,
+            ease: 'power4.out',
+          },
+          0,
+        )
+        .to(
+          fadeInUp,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            stagger: 0.2,
+            clearProps: 'transform',
+          },
+          '-=0.7',
+        )
+        .fromTo(
+          '.developer-float',
+          { y: 1, rotate: -1 },
+          {
+            y: -1,
+            rotate: 1,
+            duration: 4.5,
+            ease: 'sine.inOut',
+            repeat: -1,
+            yoyo: true,
+          },
+          '<',
+        );
     }, root);
     return () => ctx.revert();
   }, []);
@@ -18,12 +64,12 @@ export function Home({ navigate }: { navigate: (page: PageId) => void }) {
     <div ref={root}>
       <ThreeBackground />
       <div className="h-[80vh] flex flex-col justify-center relative z-10">
-        <h1 className="font-display font-bold text-[12vw] md:text-[10vw] lg:text-[9vw] leading-[0.85] uppercase tracking-tighter mix-blend-exclusion">
+        <h1 className="font-display font-bold text-[clamp(3.75rem,11vw,9rem)] md:text-[clamp(5rem,9vw,8.5rem)] lg:text-[clamp(5.5rem,7.2vw,8rem)] leading-[0.85] uppercase tracking-tighter mix-blend-exclusion">
           <div className="overflow-hidden">
             <span className="block reveal-text">Kittiphat</span>
           </div>
-          <div className="overflow-hidden">
-            <span className="block reveal-text text-transparent text-stroke">Developer</span>
+          <div className="overflow-hidden developer-float">
+            <span className="block reveal-text text-transparent text-stroke whitespace-nowrap">Developer</span>
           </div>
           <div className="overflow-hidden">
             <span className="block reveal-text text-primary">Portfolio</span>
@@ -32,15 +78,15 @@ export function Home({ navigate }: { navigate: (page: PageId) => void }) {
 
         <div className="mt-8 md:mt-12 flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-6 opacity-0 fade-in-up">
           <p className="font-body text-gray-400 max-w-md text-base md:text-lg">
-            I&rsquo;m a young software developer creating technology that is both functional and inspiring.
-            Check out more of my work here and on my GitHub!
+            ผมเป็นนักพัฒนาซอฟต์แวร์รุ่นใหม่ที่สร้างเทคโนโลยีให้ทั้งใช้งานได้จริงและสร้างแรงบันดาลใจ
+            สามารถดูผลงานเพิ่มเติมของผมได้ที่นี่และบน GitHub!
           </p>
           <div className="flex flex-col xs:flex-row space-y-4 xs:space-y-0 xs:space-x-4 w-full md:w-auto">
             <button
               onClick={() => navigate('projects')}
               className="w-full xs:w-auto px-8 py-4 border border-primary text-primary hover:bg-primary hover:text-black transition-all font-bold tracking-widest uppercase text-sm text-center"
             >
-              Explore Works
+              สำรวจผลงาน
             </button>
             <a
               href="/Docs/KittiphatCV.pdf"
@@ -48,13 +94,13 @@ export function Home({ navigate }: { navigate: (page: PageId) => void }) {
               download
               className="w-full xs:w-auto px-8 py-4 border border-white/20 text-white hover:border-primary hover:text-primary transition-all font-bold tracking-widest uppercase text-sm flex items-center justify-center"
             >
-              Download CV
+              ดาวน์โหลด CV
             </a>
           </div>
         </div>
 
         <div className="absolute bottom-0 right-0 opacity-0 fade-in-up delay-300 hidden md:block">
-          <span className="font-display text-6xl md:text-9xl opacity-10 select-none">2025</span>
+          <span className="font-display text-6xl md:text-9xl opacity-10 select-none">2026</span>
         </div>
       </div>
     </div>
