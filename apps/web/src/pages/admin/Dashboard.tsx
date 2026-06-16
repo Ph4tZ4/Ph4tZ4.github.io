@@ -16,7 +16,6 @@ import {
   Settings as SettingsIcon,
   Trash2,
   Upload,
-  UploadCloud,
   User,
   X,
 } from 'lucide-react';
@@ -274,12 +273,8 @@ export function Dashboard({ onLogout }: { onLogout: () => void }) {
   }
 
   async function saveAll() {
-    if (!confirm('This will save all current data and sync to cloud. Continue?')) return;
-    await persist(data, 'All data saved and synced successfully!', 'Saving All Data...');
-  }
-  async function syncToCloud() {
-    if (!confirm('This will sync your data to cloud. Continue?')) return;
-    await persist(data, 'Data synced successfully!', 'Syncing to Cloud...');
+    if (!confirm('This will save all current data. Continue?')) return;
+    await persist(data, 'All data saved successfully!', 'Saving All Data...');
   }
 
   const dragProps = (key: 'skills' | 'projects' | 'certificates', i: number) => ({
@@ -301,9 +296,6 @@ export function Dashboard({ onLogout }: { onLogout: () => void }) {
         <div className="header-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <button className="btn btn-primary" onClick={saveAll} title="Save all data">
             <Save size={16} /> Save All
-          </button>
-          <button className="btn btn-secondary" onClick={syncToCloud} title="Sync to cloud">
-            <UploadCloud size={16} /> Sync to Cloud
           </button>
           <a href="#/" target="_blank" rel="noreferrer" className="btn btn-secondary">
             <ExternalLink size={16} /> View Site

@@ -9,6 +9,7 @@ export function Home({ navigate }: { navigate: (page: PageId) => void }) {
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       const revealText = gsap.utils.toArray<HTMLElement>('.reveal-text');
+      const developerLetters = gsap.utils.toArray<HTMLElement>('.developer-letter');
       const fadeInUp = gsap.utils.toArray<HTMLElement>('.fade-in-up');
 
       gsap.set(revealText, { yPercent: 115 });
@@ -44,15 +45,19 @@ export function Home({ navigate }: { navigate: (page: PageId) => void }) {
           '-=0.7',
         )
         .fromTo(
-          '.developer-float',
-          { y: 1, rotate: -1 },
+          developerLetters,
+          { y: 2 },
           {
-            y: -1,
-            rotate: 1,
-            duration: 4.5,
+            y: -2,
+            duration: 1.8,
             ease: 'sine.inOut',
             repeat: -1,
             yoyo: true,
+            stagger: {
+              each: 0.12,
+              repeat: -1,
+              yoyo: true,
+            },
           },
           '<',
         );
@@ -64,12 +69,18 @@ export function Home({ navigate }: { navigate: (page: PageId) => void }) {
     <div ref={root}>
       <ThreeBackground />
       <div className="h-[80vh] flex flex-col justify-center relative z-10">
-        <h1 className="font-display font-bold text-[clamp(3.75rem,11vw,9rem)] md:text-[clamp(5rem,9vw,8.5rem)] lg:text-[clamp(5.5rem,7.2vw,8rem)] leading-[0.85] uppercase tracking-tighter mix-blend-exclusion">
+        <h1 className="font-display font-bold text-[clamp(4.5rem,12vw,10.5rem)] md:text-[clamp(6rem,10vw,10rem)] lg:text-[clamp(6.5rem,8.5vw,9.5rem)] leading-[0.85] uppercase tracking-tighter mix-blend-exclusion">
           <div className="overflow-hidden">
             <span className="block reveal-text">Kittiphat</span>
           </div>
           <div className="overflow-hidden developer-float">
-            <span className="block reveal-text text-transparent text-stroke whitespace-nowrap">Developer</span>
+            <span className="block reveal-text text-transparent text-stroke whitespace-nowrap">
+              {'Developer'.split('').map((letter, index) => (
+                <span key={`${letter}-${index}`} className="developer-letter inline-block">
+                  {letter}
+                </span>
+              ))}
+            </span>
           </div>
           <div className="overflow-hidden">
             <span className="block reveal-text text-primary">Portfolio</span>
