@@ -118,7 +118,7 @@ export function Dashboard({ onLogout }: { onLogout: () => void }) {
       });
     } else if (type === 'certificate') {
       const c = data.certificates[index];
-      setForm({ title: c.title, issuer: c.issuer, date: c.date, description: c.description, image: c.image ?? '' });
+      setForm({ title: c.title, issuer: c.issuer, date: c.date, description: c.description, image: c.image ?? '', pdfUrl: c.pdfUrl ?? '' });
     }
   }
 
@@ -168,7 +168,7 @@ export function Dashboard({ onLogout }: { onLogout: () => void }) {
       next = { ...data, projects };
       msg = editing ? 'Project updated successfully!' : 'Project added successfully!';
     } else if (modal === 'certificate') {
-      const certificates = upsert(data.certificates, { title: f('title'), issuer: f('issuer'), date: f('date'), description: f('description'), image: f('image') });
+      const certificates = upsert(data.certificates, { title: f('title'), issuer: f('issuer'), date: f('date'), description: f('description'), image: f('image'), pdfUrl: f('pdfUrl') });
       next = { ...data, certificates };
       msg = editing ? 'Certificate updated successfully!' : 'Certificate added successfully!';
     }
@@ -759,6 +759,7 @@ export function Dashboard({ onLogout }: { onLogout: () => void }) {
         <Field label="Date" value={f('date')} onChange={(v) => setF('date', v)} placeholder="e.g., 2024" required />
         <TextAreaField label="Description" value={f('description')} onChange={(v) => setF('description', v)} placeholder="Describe the certificate" required />
         <Field label="Certificate Image URL" type="url" value={f('image')} onChange={(v) => setF('image', v)} placeholder="https://raw.githubusercontent.com/.../cert.jpg" />
+        <Field label="PDF Link" type="url" value={f('pdfUrl')} onChange={(v) => setF('pdfUrl', v)} placeholder="https://.../certificate.pdf" />
       </Modal>
     </>
   );

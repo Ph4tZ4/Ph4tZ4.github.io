@@ -73,6 +73,7 @@ const CertificateSchema = new Schema(
     date: String,
     description: String,
     image: String,
+    pdfUrl: String,
   },
   { _id: false },
 );

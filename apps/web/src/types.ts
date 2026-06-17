@@ -52,6 +52,7 @@ export interface Certificate {
   date: string;
   description: string;
   image: string;
+  pdfUrl?: string;
 }
 
 export interface Portfolio {

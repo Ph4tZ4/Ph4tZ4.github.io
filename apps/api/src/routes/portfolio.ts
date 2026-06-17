@@ -79,6 +79,7 @@ const certificateSchema = z.object({
   date: z.string().default(''),
   description: z.string().default(''),
   image: z.string().default(''),
+  pdfUrl: z.string().default(''),
 });
 
 const portfolioSchema = z.object({

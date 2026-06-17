@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Award, X } from 'lucide-react';
+import { Award, FileText, X } from 'lucide-react';
 import type { Certificate } from '../../types';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -123,6 +123,16 @@ export function Certificates({ certificates }: { certificates: Certificate[] }) 
                   <div className="text-gray-300 leading-relaxed text-base md:text-lg pb-8">
                     <p>{active.description}</p>
                   </div>
+                  {active.pdfUrl && (
+                    <a
+                      href={active.pdfUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 px-6 py-3 border border-primary text-primary hover:bg-primary hover:text-black transition-all font-bold tracking-widest uppercase text-sm"
+                    >
+                      <FileText className="w-4 h-4" /> View PDF
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
