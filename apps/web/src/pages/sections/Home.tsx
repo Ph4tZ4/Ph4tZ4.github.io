@@ -69,7 +69,7 @@ export function Home({ navigate }: { navigate: (page: PageId) => void }) {
     <div ref={root}>
       <ThreeBackground />
       <div className="h-[80vh] flex flex-col justify-center relative z-10">
-        <h1 className="font-display font-bold text-[clamp(4.5rem,12vw,10.5rem)] md:text-[clamp(6rem,10vw,10rem)] lg:text-[clamp(6.5rem,8.5vw,9.5rem)] leading-[0.85] uppercase tracking-tighter mix-blend-exclusion">
+        <h1 className="font-display font-bold text-[clamp(4.0rem,11vw,10.5rem)] md:text-[clamp(6rem,10vw,10rem)] lg:text-[clamp(6.5rem,8.5vw,9.5rem)] leading-[0.85] uppercase tracking-tighter mix-blend-exclusion">
           <div className="overflow-hidden">
             <span className="block reveal-text">Kittiphat</span>
           </div>
