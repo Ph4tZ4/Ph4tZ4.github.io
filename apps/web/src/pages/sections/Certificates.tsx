@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Award, FileText, X } from 'lucide-react';
@@ -94,7 +95,7 @@ export function Certificates({ certificates }: { certificates: Certificate[] }) 
       )}
 
       {/* Detail Modal */}
-      {active && (
+      {active && createPortal(
         <div className="fixed inset-0 z-[100] transition-opacity duration-300">
           <div className="absolute inset-0 bg-black/90 backdrop-blur-sm" onClick={() => setSelected(null)} />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl px-4 md:px-8">
@@ -137,7 +138,8 @@ export function Certificates({ certificates }: { certificates: Certificate[] }) 
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );
