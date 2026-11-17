@@ -1,0 +1,4 @@
+DirectoryIndex index.html
+RewriteEngine On
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://ph4tz4.bobok.site%{REQUEST_URI} [R=301,L,NE]

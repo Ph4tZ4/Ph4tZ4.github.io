@@ -36,104 +36,110 @@ const DataManager = {
         return {
             about: {
                 years: "5+",
-                location: "Loei, Thailand",
-                status: "Open for Freelance",
-                description: "สวัสดีครับ ผมนายกิตติภัทร สุวรรณศรี นักศึกษาปวส.2 สาขานักพัฒนาซอฟต์แวร์ขั้นสูง แผนกเทคโนโลยีสารสนเทศ ผมเชื่อว่าเทคโนโลยีที่ดี ควรช่วยให้ชีวิตผู้คนดีขึ้นได้จริง งานของผมจึงไม่ได้เน้นแค่ “ทำงานได้” แต่ต้อง “สร้างประสบการณ์ที่ดีให้ผู้ใช้” ไปพร้อมกัน",
-                detail: "ผมหลงใหลการสร้างสรรค์แอปและซอฟต์แวร์ใหม่ ๆ ที่ตอบโจทย์การใช้งาน และมีลูกเล่นที่สะท้อนความเป็นตัวเอง และยังมีอีกหลายโปรเจกต์ที่กำลังพัฒนาอยู่บน GitHub ซึ่งเติบโตไปพร้อมกับผมในทุกวัน",
+                location: "กรุงเทพมหานคร ประเทศไทย",
+                status: "พร้อมรับงานอิสระ",
+                description: "สวัสดีครับ ผมกิตติภัทร สุวรรณศรี ปัจจุบันกำลังศึกษาอยู่ชั้นปีที่ 3 คณะเทคโนโลยีสารสนเทศ (SIT) สาขาเทคโนโลยีสารสนเทศและการสื่อสาร (ICT) มหาวิทยาลัยศรีปทุม ผมสนใจการพัฒนาเว็บไซต์และซอฟต์แวร์ ตั้งแต่การออกแบบหน้าจอไปจนถึงระบบเบื้องหลัง และชอบนำสิ่งที่เรียนมาทดลองสร้างเป็นโปรเจกต์ที่ใช้งานได้จริง",
+                detail: "ผมเติบโตจากการเรียนสายอาชีพและประสบการณ์ฝึกงาน สู่การเรียนในระดับมหาวิทยาลัย ทุกโปรเจกต์เป็นโอกาสให้ผมฝึกคิดอย่างเป็นระบบ รับฟังความคิดเห็น และปรับงานให้ดีขึ้น ผมให้ความสำคัญกับโค้ดที่อ่านเข้าใจง่าย การทำงานร่วมกับผู้อื่น และประสบการณ์ของคนที่ใช้งาน",
                 education: [
                     {
-                        degree: "นักพัฒนาซอฟต์แวร์เว็บ และอุปกรณ์เคลื่อนที / นักพัฒนางานระบบสมองกลฝังตัว และ IoT",
+                        degree: "เทคโนโลยีสารสนเทศและการสื่อสาร (ICT) · ชั้นปีที่ 3",
+                        institution: "มหาวิทยาลัยศรีปทุม",
+                        year: "กำลังศึกษา",
+                        description: "กำลังศึกษาระดับปริญญาตรี คณะเทคโนโลยีสารสนเทศ (SIT) สาขาเทคโนโลยีสารสนเทศและการสื่อสาร (ICT) ต่อยอดพื้นฐานจากสายอาชีพสู่การเรียนในระดับมหาวิทยาลัย พร้อมฝึกพัฒนาซอฟต์แวร์ผ่านการลงมือทำโปรเจกต์และการเรียนรู้ร่วมกับผู้อื่น"
+                    },
+                    {
+                        degree: "การพัฒนาเว็บ แอปพลิเคชัน และระบบ IoT",
                         institution: "วิทยาลัยเทคนิคชัยภูมิ / วิทยาลัยเทคนิคเลย",
                         year: "2021 - 2023",
-                        description: "นี่เป็นการเริ่มเรียนเกี่ยวกับ IT อย่างจริงจัง จากการที่ผมย้ายไป 2 สถาบัน ที่มีหลักสูตรขั้นพื้นฐานที่แตกต่างกัน ทำให้ผมได้รับความรู้ทั้งสองด้านเข้ามา และในช่วงนี้ผมก็ยังได้เข้าร่วมการแข่งขันทักษะวิชาชีพ แล้วก็ยังมีการได้เข้าฝึกงานกับบริษัท น้ำตาลมิตรผล จำกัด อีกด้วย"
+                        description: "เริ่มต้นเรียนด้าน IT ผ่านหลักสูตรของสองสถาบัน ได้ฝึกทั้งการพัฒนาเว็บและระบบ IoT เข้าร่วมการแข่งขันทักษะวิชาชีพ และฝึกงานที่บริษัท น้ำตาลมิตรผล จำกัด"
                     },
                     {
                         degree: "นักพัฒนาซอฟต์แวร์ขั้นสูง",
                         institution: "วิทยาลัยเทคนิคเลย",
                         year: "2024 - 2025",
-                        description: "นี่เป็นปีที่ผมได้รู้ตัวเองแล้วว่าตัวเองเหมาะกับอะไร และชอบทำอะไร ผมจึงเรื่องที่จะมาเรียนการเป็นนักพัฒนาซอฟต์แวร์ขั้นสูง เพื่อให้ตัวเองได้รับความรู้เชิงลึกในด้านนี้ แม้ว่าจะเลือกเรียนเป็นนักพัฒนาซอฟต์แวร์ แต่ผมก็เรียนวิชาเสริมที่เกี่ยวกับด้าน Network, AI และแม้ว่าในหลักสูตรจะมีวิชา Hybrid App อยู่แล้ว แต่ผมก็เลือกที่จะเรียน Native App ด้วย เพื่อที่จะได้รู้ในทุก ๆ ด้าน และเพื่อจะได้นำไปปรับใช้ในอนาคต"
+                        description: "ศึกษาการพัฒนาซอฟต์แวร์ขั้นสูง พร้อมเรียนรู้ด้านเครือข่าย AI และการพัฒนาแอปทั้ง Hybrid และ Native เพื่อเข้าใจการเลือกใช้เทคโนโลยีให้เหมาะกับงาน"
                     }
                 ],
                 experience: [
                     {
-                        role: "IT INTERN SUPERVISOR",
+                        role: "หัวหน้าทีมนักศึกษาฝึกงานด้านไอที",
                         company: "ICONNEX THAILAND (ปัจจุบันคือ ICONNEX WORLD) ",
                         period: "มีนาคม - มิถุนายน 2568",
                         description: "รับผิดชอบการบริหารจัดการนักศึกษาฝึกงาน IT ภายในทีมและมอบหมายงานตามความถนัด พัฒนาเว็บไซต์และระบบภายในสำหรับใช้งานในองค์กร ห้างสรรพสินค้า และงาน Event ต่างๆ โดยใช้เทคโนโลยี HTML, CSS, JavaScript (และ Frameworks), PHP, SQL, Python และเครื่องมืออย่าง Docker, GitHub, MongoDB เพื่อปรับปรุงคุณภาพงาน พร้อมทั้งตรวจสอบคุณภาพและความถูกต้องของโค้ด (Code Review) ก่อนนำขึ้น Production เพื่อให้ระบบมีความเสถียรและปลอดภัย รวมถึงเพิ่มประสิทธิภาพระบบ ลดข้อผิดพลาด และทำให้การใช้งานง่ายขึ้นสำหรับผู้ใช้จริง"
                     },
                     {
-                        role: "IT INTERN",
-                        company: "Mitr Phol Sugar Co., Ltd.",
+                        role: "นักศึกษาฝึกงานด้านไอที",
+                        company: "บริษัท น้ำตาลมิตรผล จำกัด",
                         period: "มีนาคม - เมษายน 2566",
                         description: "ดูแลและสนับสนุนระบบเครือข่ายและอุปกรณ์คอมพิวเตอร์ในองค์กร พัฒนาและแก้ไขระบบงานพื้นฐานเพื่อเพิ่มประสิทธิภาพการทำงาน พัฒนาเว็บไซต์หลักของบริษัทและเว็บไซต์ที่ใช้ในการสัมมนาในงานต่างๆ พร้อมทั้งเรียนรู้การทำงานแบบมืออาชีพและการทำงานร่วมกับทีม IT ในองค์กรขนาดใหญ่"
                     },
                     {
-                        role: "FRONTEND SOFTWARE DEVELOPER",
+                        role: "นักพัฒนาซอฟต์แวร์ส่วนติดต่อผู้ใช้",
                         company: "วิทยาลัยเทคนิคเลย",
                         period: "2024 - ปัจจุบัน",
                         description: "รับผิดชอบการดูแล ออกแบบ และพัฒนาส่วนหน้าบ้าน (Frontend) ของเว็บไซต์ทั้งหมดที่เกี่ยวข้องกับวิทยาลัยตามที่ได้รับมอบหมาย โดยเน้นการสร้างประสบการณ์ผู้ใช้งานที่ดี (User Experience) และออกแบบส่วนติดต่อผู้ใช้ (User Interface) ให้มีความสวยงาม ใช้งานง่าย และตอบสนองได้ดีบนทุกอุปกรณ์ (Responsive Design) พร้อมทั้งทำงานร่วมกับทีมพัฒนาเพื่อให้มั่นใจว่าเว็บไซต์มีประสิทธิภาพและตรงตามความต้องการของวิทยาลัยและผู้ใช้งาน"
                     }
                 ],
-                philosophy: "ผมเชื่อว่าการพัฒนาซอฟต์แวร์ที่ดีไม่ได้เกิดจากเทคโนโลยีเพียงอย่างเดียว แต่ต้องมาพร้อมกับความเข้าใจในความต้องการของผู้ใช้งานจริงและการทำงานเป็นทีมอย่างมีประสิทธิภาพ ในการทำงานทุกโปรเจกต์ ผมมุ่งเน้นการสร้างโซลูชันที่ไม่เพียงแค่ทำงานได้ แต่ต้องใช้งานง่าย มีเสถียรภาพ และสามารถขยายงานได้ในอนาคต ผมให้ความสำคัญกับคุณภาพของโค้ดผ่านการทำ Code Review อย่างสม่ำเสมอ เพราะเชื่อว่าการป้องกันปัญหาตั้งแต่ต้นทางดีกว่าการแก้ไขภายหลัง ในฐานะหัวหน้าทีมฝึกงาน ผมได้เรียนรู้ว่าการมอบหมายงานตามจุดแข็งของแต่ละคนและการสื่อสารที่ชัดเจนเป็นกุญแจสำคัญของความสำเร็จ ผมมุ่งมั่นพัฒนาตนเองอย่างต่อเนื่อง ติดตามเทคโนโลยีใหม่ๆ และแบ่งปันความรู้ผ่านการบรรยายและพอดแคสต์ เพราะเชื่อว่าการเติบโตของตัวเองและทีมเกิดขึ้นพร้อมกัน ด้วยเป้าหมายในการก้าวสู่ตำแหน่ง Project Manager ผมจึงพัฒนาทักษะทั้งด้านเทคนิคและการบริหารจัดการอย่างสมดุล เพื่อเป็นผู้นำที่สามารถเชื่อมโยงระหว่างทีมพัฒนาและวัตถุประสงค์ทางธุรกิจได้อย่างมีประสิทธิภาพ",
+                philosophy: "เริ่มจากเข้าใจปัญหา ลงมือทำให้ชัดเจน แล้วค่อย ๆ ปรับให้ดีขึ้น ผมอยากให้ทุกโปรเจกต์เป็นทั้งงานที่มีประโยชน์กับคนใช้ และบทเรียนที่ทำให้ผมเป็นนักพัฒนาที่ดีขึ้น",
                 interests: [
-                    "Web Development & Programming",
-                    "Learning New Technologies & Frameworks",
-                    "Artificial Intelligence & Machine Learning",
-                    "IT Education & Mentoring",
-                    "Podcasting & Content Creation",
-                    "Tech Community Involvement",
-                    "Public Speaking & Presentations",
-                    "Problem Solving & Innovation",
-                    "System Architecture & Design Patterns",
-                    "Reading Tech Blogs & Articles",
-                    "Open Source Contribution",
-                    "UI/UX Design",
-                    "Gaming & Game Development",
-                    "Music & Entertainment",
-                    "Photography & Videography",
-                    "Networking & Professional Development",
-                    "Attending Tech Conferences & Workshops",
-                    "Writing Technical Documentation",
-                    "Code Optimization & Performance Tuning",
-                    "Exploring Cloud Technologies",
-                    "Cybersecurity & Best Practices",
-                    "Mobile App Development",
-                    "DevOps & Automation",
-                    "Building Side Projects",
-                    "Traveling & Cultural Exchange"
+                    "การพัฒนาเว็บไซต์และการเขียนโปรแกรม",
+                    "การเรียนรู้เทคโนโลยีและเฟรมเวิร์กใหม่",
+                    "ปัญญาประดิษฐ์และการเรียนรู้ของเครื่อง",
+                    "การสอนและให้คำแนะนำด้านไอที",
+                    "การทำพอดแคสต์และสร้างเนื้อหา",
+                    "การมีส่วนร่วมในชุมชนเทคโนโลยี",
+                    "การพูดในที่สาธารณะและการนำเสนอ",
+                    "การแก้ปัญหาและสร้างนวัตกรรม",
+                    "สถาปัตยกรรมระบบและรูปแบบการออกแบบ",
+                    "การอ่านบทความด้านเทคโนโลยี",
+                    "การร่วมพัฒนาซอฟต์แวร์โอเพนซอร์ส",
+                    "การออกแบบประสบการณ์และส่วนติดต่อผู้ใช้",
+                    "เกมและการพัฒนาเกม",
+                    "ดนตรีและความบันเทิง",
+                    "การถ่ายภาพและวิดีโอ",
+                    "การสร้างเครือข่ายและพัฒนาวิชาชีพ",
+                    "การเข้าร่วมงานประชุมและเวิร์กช็อปเทคโนโลยี",
+                    "การเขียนเอกสารทางเทคนิค",
+                    "การปรับปรุงโค้ดและประสิทธิภาพ",
+                    "การสำรวจเทคโนโลยีคลาวด์",
+                    "ความปลอดภัยไซเบอร์และแนวปฏิบัติที่ดี",
+                    "การพัฒนาแอปพลิเคชันมือถือ",
+                    "การดูแลระบบและงานอัตโนมัติ",
+                    "การสร้างโปรเจกต์ส่วนตัว",
+                    "การท่องเที่ยวและแลกเปลี่ยนวัฒนธรรม"
                 ],
                 expertise: [
                     {
-                        area: "Frontend Development",
-                        description: "มีความเชี่ยวชาญในการพัฒนาส่วนหน้าบ้านของเว็บแอปพลิเคชันด้วย HTML, CSS, JavaScript และ Frameworks ต่างๆ โดยเน้นการสร้าง User Interface ที่สวยงาม ใช้งานง่าย และรองรับการแสดงผลบนหลากหลายอุปกรณ์ (Responsive Design) พร้อมทั้งปรับปรุงประสิทธิภาพการทำงานให้รวดเร็วและราบรื่น"
+                        area: "การพัฒนาส่วนติดต่อผู้ใช้",
+                        description: "พัฒนาเว็บด้วย HTML, CSS, JavaScript และเฟรมเวิร์กที่เหมาะกับงาน โดยฝึกออกแบบหน้าจอที่ใช้งานง่าย รองรับหลายขนาดจอ และใส่ใจประสิทธิภาพ"
                     },
                     {
-                        area: "Backend Development",
-                        description: "มีประสบการณ์ในการพัฒนาระบบฝั่ง Backend โดยใช้ PHP, Python, และ SQL ในการสร้าง API, จัดการฐานข้อมูล และพัฒนาระบบภายในองค์กร สามารถออกแบบสถาปัตยกรรมระบบที่มีประสิทธิภาพ ปลอดภัย และรองรับการขยายงานในอนาคตได้"
+                        area: "การพัฒนาระบบเบื้องหลัง",
+                        description: "มีประสบการณ์ใช้ PHP, Python และ SQL พัฒนา API และระบบภายในองค์กร สนใจการเชื่อมต่อข้อมูลและออกแบบการทำงานเบื้องหลังให้เข้าใจง่าย"
                     },
                     {
-                        area: "Database Management",
-                        description: "เชี่ยวชาญในการออกแบบและจัดการฐานข้อมูลทั้งแบบ Relational (SQL) และ NoSQL (MongoDB) สามารถเขียน Query ที่มีประสิทธิภาพ ปรับแต่งโครงสร้างฐานข้อมูลให้เหมาะสม และรักษาความสมบูรณ์ของข้อมูลได้อย่างมีประสิทธิภาพ"
+                        area: "การจัดการฐานข้อมูล",
+                        description: "ทำงานกับฐานข้อมูล SQL และ MongoDB ตั้งแต่จัดโครงสร้างข้อมูล เขียน Query ไปจนถึงเชื่อมต่อกับแอปพลิเคชัน พร้อมฝึกออกแบบข้อมูลให้เหมาะกับการใช้งาน"
                     },
                     {
-                        area: "DevOps & Version Control",
-                        description: "มีความชำนาญในการใช้เครื่องมือสำหรับการพัฒนาและการทำงานร่วมกันในทีม เช่น Docker สำหรับ Containerization และ GitHub สำหรับ Version Control และ Collaboration สามารถจัดการ Workflow การพัฒนาตั้งแต่ Development จนถึง Production ได้อย่างเป็นระบบ"
+                        area: "การดูแลระบบและควบคุมเวอร์ชัน",
+                        description: "ใช้ GitHub จัดการเวอร์ชันโค้ดและทำงานร่วมกับทีม รวมถึงใช้ Docker เตรียมสภาพแวดล้อมสำหรับพัฒนาและทดลองระบบ"
                     },
                     {
-                        area: "Code Quality & Review",
-                        description: "มีประสบการณ์ในการตรวจสอบคุณภาพโค้ด (Code Review) และ Quality Assurance ก่อนนำขึ้น Production เพื่อให้มั่นใจว่าระบบมีความเสถียร ปลอดภัย และมีประสิทธิภาพสูง พร้อมทั้งลดข้อผิดพลาดและปัญหาที่อาจเกิดขึ้นในอนาคต"
+                        area: "คุณภาพและการตรวจทานโค้ด",
+                        description: "เรียนรู้การตรวจทานโค้ดจากประสบการณ์ฝึกงาน ให้ความสำคัญกับความถูกต้อง โค้ดที่อ่านรู้เรื่อง และการตรวจสอบก่อนนำระบบไปใช้งาน"
                     },
                     {
-                        area: "Team Leadership & Project Management",
-                        description: "มีประสบการณ์ในการบริหารจัดการทีมนักศึกษาฝึกงาน IT ในฐานะหัวหน้าทีม สามารถมอบหมายงานตามความถนัดของแต่ละคน วางแผนการทำงาน และประสานงานระหว่างทีมพัฒนากับความต้องการทางธุรกิจได้อย่างมีประสิทธิภาพ"
+                        area: "การดูแลทีมและบริหารโปรเจกต์",
+                        description: "เคยดูแลและมอบหมายงานให้ทีมนักศึกษาฝึกงาน IT ประสบการณ์นี้ช่วยให้ผมเห็นความสำคัญของการสื่อสาร การรับฟัง และการวางแผนร่วมกัน"
                     },
                     {
-                        area: "Problem Solving & System Optimization",
-                        description: "สามารถวิเคราะห์และแก้ไขปัญหาเชิงเทคนิคได้อย่างรวดเร็ว เพิ่มประสิทธิภาพระบบ ลดข้อผิดพลาด และปรับปรุงประสบการณ์ผู้ใช้งานให้ดีขึ้นผ่านการใช้เทคโนโลยีและแนวทางที่เหมาะสม"
+                        area: "การแก้ปัญหาและปรับปรุงระบบ",
+                        description: "ฝึกแยกปัญหาเป็นส่วนเล็ก ๆ หาสาเหตุ และตรวจสอบผลหลังแก้ไข โดยใช้ทั้งข้อเสนอแนะจากผู้ใช้และสิ่งที่พบระหว่างพัฒนา"
                     },
                     {
-                        area: "Hardware & IoT Development",
-                        description: "มีพื้นฐานในการเขียนโปรแกรมควบคุม Hardware ด้วย Arduino และภาษา C/C++ สามารถพัฒนาโปรเจกต์ IoT และระบบฝังตัว (Embedded System) เบื้องต้นได้"
+                        area: "การพัฒนาฮาร์ดแวร์และอุปกรณ์เชื่อมต่ออินเทอร์เน็ต",
+                        description: "มีพื้นฐาน Arduino และภาษา C/C++ จากการเรียนสายอาชีพ เคยฝึกเขียนโปรแกรมควบคุมอุปกรณ์และพัฒนาโปรเจกต์ IoT เบื้องต้น"
                     }
                 ]
             },
@@ -151,25 +157,25 @@ const DataManager = {
                 {
                     title: "Neon Verse",
                     tech: "Three.js / WebGL",
-                    description: "An immersive 3D web experience allowing users to explore a cyberpunk city in the browser. Features high-performance shaders and audio reactivity.",
+                    description: "เว็บไซต์สามมิติที่เปิดให้สำรวจเมืองแนวไซเบอร์พังก์ผ่านเบราว์เซอร์ พร้อมเอฟเฟกต์ภาพประสิทธิภาพสูงและการตอบสนองต่อเสียง",
                     image: "https://images.unsplash.com/photo-1618172193622-ae2d025f4032?w=800&h=600&fit=crop"
                 },
                 {
                     title: "Flux Finance",
                     tech: "React / Node.js",
-                    description: "Real-time cryptocurrency dashboard with predictive analytics powered by AI. Handles over 50k websocket connections simultaneously.",
+                    description: "หน้ารวมข้อมูลคริปโทเคอร์เรนซีแบบเรียลไทม์ พร้อมการวิเคราะห์คาดการณ์ด้วยปัญญาประดิษฐ์ รองรับการเชื่อมต่อพร้อมกันกว่า 50,000 รายการ",
                     image: "https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=800&h=600&fit=crop"
                 },
                 {
                     title: "Aero System",
                     tech: "Vue / Firebase",
-                    description: "Enterprise-grade inventory management system designed for aerospace logistics. Reduced tracking errors by 40%.",
+                    description: "ระบบจัดการสินค้าคงคลังสำหรับองค์กรด้านโลจิสติกส์การบิน ช่วยลดข้อผิดพลาดในการติดตามลง 40%",
                     image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=600&fit=crop"
                 },
                 {
                     title: "Vantage UI",
                     tech: "Vanilla JS / CSS",
-                    description: "A lightweight, dependency-free UI library focused on futuristic aesthetics and micro-interactions.",
+                    description: "ชุดส่วนติดต่อผู้ใช้ขนาดเล็กที่ไม่พึ่งไลบรารีอื่น เน้นรูปแบบล้ำสมัยและการตอบสนองต่อการใช้งาน",
                     image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop"
                 }
             ],
@@ -178,21 +184,21 @@ const DataManager = {
                     title: "AWS Certified Solutions Architect",
                     issuer: "Amazon Web Services",
                     date: "2024",
-                    description: "Professional certification for designing distributed systems on AWS.",
+                    description: "ประกาศนียบัตรวิชาชีพด้านการออกแบบระบบแบบกระจายบน AWS",
                     image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=400&fit=crop"
                 },
                 {
                     title: "Google Cloud Professional Developer",
                     issuer: "Google Cloud",
                     date: "2023",
-                    description: "Expertise in building scalable applications on Google Cloud Platform.",
+                    description: "ความเชี่ยวชาญในการพัฒนาแอปพลิเคชันที่รองรับการขยายตัวบน Google Cloud Platform",
                     image: "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=600&h=400&fit=crop"
                 },
                 {
                     title: "Meta Front-End Developer",
                     issuer: "Meta (Facebook)",
                     date: "2023",
-                    description: "Professional certificate in modern front-end development with React.",
+                    description: "ประกาศนียบัตรวิชาชีพด้านการพัฒนาส่วนติดต่อผู้ใช้สมัยใหม่ด้วย React",
                     image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600&h=400&fit=crop"
                 }
             ]
@@ -245,7 +251,7 @@ const DataManager = {
             ]);
 
             if (doc.exists) {
-                const data = doc.data();
+                const data = this.refreshLegacyProfile(doc.data());
                 // Update LocalStorage as cache
                 this.saveDataLocally(data);
                 return data;
@@ -262,7 +268,7 @@ const DataManager = {
 
     // Push Data to Firestore
     async pushData(data) {
-        if (!this.db) return { success: false, message: 'Firebase not initialized' };
+        if (!this.db) return { success: false, message: 'ระบบฐานข้อมูลยังไม่พร้อมใช้งาน' };
 
         try {
             // Save to Cloud with timeout
@@ -274,21 +280,34 @@ const DataManager = {
             // Save to Local Cache
             this.saveDataLocally(data);
 
-            return { success: true, message: 'Data saved to cloud successfully' };
+            return { success: true, message: 'บันทึกข้อมูลขึ้นคลาวด์แล้ว' };
         } catch (error) {
             console.error('Error pushing data to cloud:', error);
 
             // Even if cloud fails, save locally so user doesn't lose work
             this.saveDataLocally(data);
-            return { success: false, message: 'Saved locally, but Cloud sync failed: ' + error.message };
+            return { success: false, message: 'บันทึกในเครื่องแล้ว แต่ซิงค์ขึ้นคลาวด์ไม่สำเร็จ: ' + error.message };
         }
+    },
+
+    // Keep saved portfolios current without clearing projects or certificates.
+    refreshLegacyProfile(data) {
+        if (typeof data.about?.description !== 'string' || (!data.about.description.includes('นักศึกษาปวส.2') && !data.about.description.includes('ชั้นปีที่ 3 มหาวิทยาลัยศรีปทุม ผมสนใจการพัฒนาเว็บไซต์'))) return data;
+        const current = this.getDefaultData().about;
+        const education = (data.about.education ?? []).map((e) => e.institution.includes('ศรีปทุม') && e.degree === 'ระดับปริญญาตรี · ชั้นปีที่ 3' ? current.education[0] : e);
+        return { ...data, about: { ...data.about,
+            description: current.description,
+            detail: current.detail,
+            philosophy: current.philosophy,
+            education: education.some((e) => e.institution.includes('ศรีปทุม')) ? education : [current.education[0], ...education],
+        } };
     },
 
     // Load Data from LocalStorage (Legacy/Fallback)
     loadData() {
         try {
             const data = localStorage.getItem(this.KEYS.DATA);
-            return data ? JSON.parse(data) : this.getDefaultData();
+            return data ? this.refreshLegacyProfile(JSON.parse(data)) : this.getDefaultData();
         } catch (error) {
             console.error('Error loading local data:', error);
             return this.getDefaultData();
@@ -319,10 +338,10 @@ const DataManager = {
     saveData(data) {
         try {
             localStorage.setItem(this.KEYS.DATA, JSON.stringify(data));
-            return { success: true, message: 'Data saved successfully' };
+            return { success: true, message: 'บันทึกข้อมูลแล้ว' };
         } catch (error) {
             console.error('Error saving data:', error);
-            return { success: false, message: 'Failed to save data' };
+            return { success: false, message: 'บันทึกข้อมูลไม่สำเร็จ' };
         }
     },
 
@@ -360,15 +379,15 @@ const DataManager = {
                     const data = JSON.parse(e.target.result);
                     if (this.validateData(data)) {
                         this.saveData(data);
-                        resolve({ success: true, message: 'Data imported successfully' });
+                        resolve({ success: true, message: 'นำเข้าข้อมูลแล้ว' });
                     } else {
-                        reject({ success: false, message: 'Invalid data structure' });
+                        reject({ success: false, message: 'โครงสร้างข้อมูลไม่ถูกต้อง' });
                     }
                 } catch (error) {
-                    reject({ success: false, message: 'Failed to parse JSON file' });
+                    reject({ success: false, message: 'อ่านข้อมูลในไฟล์ JSON ไม่สำเร็จ' });
                 }
             };
-            reader.onerror = () => reject({ success: false, message: 'Failed to read file' });
+            reader.onerror = () => reject({ success: false, message: 'อ่านไฟล์ไม่สำเร็จ' });
             reader.readAsText(file);
         });
     },
@@ -440,7 +459,7 @@ const DataManager = {
             data.skills[index] = skill;
             return this.saveData(data);
         }
-        return { success: false, message: 'Invalid skill index' };
+        return { success: false, message: 'ไม่พบรายการทักษะที่ระบุ' };
     },
 
     deleteSkill(index) {
@@ -449,7 +468,7 @@ const DataManager = {
             data.skills.splice(index, 1);
             return this.saveData(data);
         }
-        return { success: false, message: 'Invalid skill index' };
+        return { success: false, message: 'ไม่พบรายการทักษะที่ระบุ' };
     },
 
     // CRUD Operations for Projects
@@ -465,7 +484,7 @@ const DataManager = {
             data.projects[index] = project;
             return this.saveData(data);
         }
-        return { success: false, message: 'Invalid project index' };
+        return { success: false, message: 'ไม่พบรายการโปรเจกต์ที่ระบุ' };
     },
 
     deleteProject(index) {
@@ -474,7 +493,7 @@ const DataManager = {
             data.projects.splice(index, 1);
             return this.saveData(data);
         }
-        return { success: false, message: 'Invalid project index' };
+        return { success: false, message: 'ไม่พบรายการโปรเจกต์ที่ระบุ' };
     },
 
     // CRUD Operations for Certificates
@@ -492,7 +511,7 @@ const DataManager = {
             data.certificates[index] = certificate;
             return this.saveData(data);
         }
-        return { success: false, message: 'Invalid certificate index' };
+        return { success: false, message: 'ไม่พบรายการเกียรติบัตรที่ระบุ' };
     },
 
     deleteCertificate(index) {
@@ -502,7 +521,7 @@ const DataManager = {
             data.certificates.splice(index, 1);
             return this.saveData(data);
         }
-        return { success: false, message: 'Invalid certificate index' };
+        return { success: false, message: 'ไม่พบรายการเกียรติบัตรที่ระบุ' };
     },
 
     // Update About Section
